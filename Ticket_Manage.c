@@ -12,11 +12,12 @@
 // 返回值：OK, NOSPACE
 // 
 // 返回VL_Ti_Lib中对应车次开头的头指针
-// SUB_TrainInfo * GetHeadPointer(data)
+// SUB_TrainInfo * GetHeadPointer(char)
 // 返回值：对应车次的SUB_TrainInfo指针
 // 
 // 新增车次
-// Status 
+// Status NewTrain()
+// 返回值：NOSPACE, OK
 // 
 //
 
@@ -95,4 +96,28 @@ Status TM_InitTicket()
 
 } // Status InitTicket()
 
-// 
+//返回VL_Ti_Lib中对应车次开头的头指针
+SUB_TrainInfo* TM_GetHeadPointer(char FirstC)
+{
+	switch (FirstC)
+	{
+	case 'G': return VL_Ti_Lib->G;
+	case 'D': return VL_Ti_Lib->D;
+	case 'C': return VL_Ti_Lib->C;
+	case 'Z': return VL_Ti_Lib->Z;
+	case 'T': return VL_Ti_Lib->T;
+	case 'K': return VL_Ti_Lib->K;
+	case 'Y': return VL_Ti_Lib->Y;
+	case 'L': return VL_Ti_Lib->L;
+	case 'S': return VL_Ti_Lib->S;
+	case 'N': return VL_Ti_Lib->N;
+	case 'P': return VL_Ti_Lib->P;
+	}
+}
+
+// 新增车次
+Status NewTrain()
+{
+
+}
+
