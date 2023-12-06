@@ -8,17 +8,25 @@
 // 函数与功能对应：
 // 
 // 初始化VL_Ti_Lib
-// Status InitTicket()
+// Status InitTicket(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
+//	LeaveTime* _LeaveTime, int _OccuQuota, int _SurpTick)
 // 返回值：OK, NOSPACE
 // 
 // 返回VL_Ti_Lib中对应车次开头的头指针
-// SUB_TrainInfo * GetHeadPointer(char)
+// SUB_TrainInfo * TM_GetHeadPointer(char)
 // 返回值：对应车次的SUB_TrainInfo指针
 // 
 // 新增车次
-// Status NewTrain()
-// 返回值：NOSPACE, OK
+// Status TM_NewTrain()
+// 返回值：NOSPACE, OK, ERROR
 // 
+// 将车次信息结点依照升序插入到对应位置
+// Status TM_InsertTrainNode (SUB_TrainInfo*)
+// 返回值：
+// 
+// 更新该车次类别下，头结点FIrstNum指针数组内的结点指针
+// Status TM_UpdateFirstNumPointer(char*)
+// 返回值
 //
 
 #include "V_Lib.h"
@@ -96,7 +104,7 @@ Status TM_InitTicket()
 
 } // Status InitTicket()
 
-//返回VL_Ti_Lib中对应车次开头的头指针
+// 返回VL_Ti_Lib中对应车次开头的头指针
 SUB_TrainInfo* TM_GetHeadPointer(char FirstC)
 {
 	switch (FirstC)
@@ -115,9 +123,48 @@ SUB_TrainInfo* TM_GetHeadPointer(char FirstC)
 	}
 }
 
-// 新增车次
-Status NewTrain()
+// 将车次信息结点依照升序插入到对应位置
+Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 {
+	
+}
 
+// 更新该车次类别下，头结点FIrstNum指针数组内的结点指针
+Status TM_UpdateFirstNumPointer(char* TrainNum)
+{
+	
+}
+
+// 新增车次
+// input：车次编号、始发站、途经站、终到站、_LeaveTime(各站点发车时间、各站点运行到下一站点时间)、乘员定额、余票数量
+// output：NOSPACE：无可用空间，ERROR：对应车次头结点不存在，OK：正常
+Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
+	LeaveTime* _LeaveTime, int _OccuQuota, int _SurpTick)
+{
+	SUB_TrainInfo* NT, *p; // NT为新结点指针，p为工作指针
+	NT = (SUB_TrainInfo*)malloc(sizeof(struct SUB_TrainInfo));
+	if (!NT) return NOSPACE; // 无可用空间
+
+	if (!(p = TM_GetHeadPointer(_TrainNum[0]))) return ERROR; // 该类别车次的头指针不存在
+
+	// 写入车次信息进NT
+	NT->NodeKind = "E";
+	NT->Start = _Start;
+	NT->Stop = _Stop;
+	NT->End = _End;
+	NT->StationLeaveTime = _LeaveTime;
+	NT->OccupantQuota = _OccuQuota;
+	NT->SurplusTicket = _SurpTick;
+
+	NT->TrainOrder = NULL;
+	NT->TrainWaitOrder = NULL;
+
+	NT->next = NULL;
+
+	// 将新车次结点插入到VL_Ti_lib中，并更新对应车次类别头结点的信息
+	TM_InsertTrainNode(NT);
+	TM_UpdateFirstNumPointer(_TrainNum);
+
+	return OK;
 }
 
