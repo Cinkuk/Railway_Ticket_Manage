@@ -129,10 +129,10 @@
   <ItemGroup>
     <ClCompile Include="File_Operation.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="Functions.c" />
     <ClCompile Include="Order_Manage.c" />
     <ClCompile Include="Struct_Lib.c" />
     <ClCompile Include="Ticket_Manage.c" />
+    <ClCompile Include="UserFunction.c" />
     <ClCompile Include="Variables_Lib.c" />
   </ItemGroup>
   <ItemGroup>
