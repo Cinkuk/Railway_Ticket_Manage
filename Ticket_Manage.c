@@ -37,6 +37,7 @@
 
 #include "V_Lib.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 // 申请SUB_TrainInfo类别的头结点，用于初始化FirstNum[]指针数组内的结点
 SUB_TrainInfo* TM_RequestSUBTrainHeadNode()
@@ -62,7 +63,6 @@ SUB_TrainInfo* TM_RequestSUBTrainHeadNode()
 
 	return q;
 }
-
 
 // 申请SUB_TrainInfo类别的头结点，用于初始化TOP_TrainInfo下的结点
 SUB_TrainInfo* TM_RequestNodeForTopNode()
@@ -169,6 +169,7 @@ SUB_TrainInfo* TM_GetHeadPointer(char* FirstC)
 	case 'N': return VL_Ti_Lib->N;
 	case 'P': return VL_Ti_Lib->P;
 	}
+	return NULL; // 传入的字符不存在于可用类型中
 }
 
 // 将车次信息结点依照升序插入到对应位置
@@ -237,7 +238,7 @@ Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 	return OK;
 }
 
-// 新增车次
+// 新增车次结点进车次信息系统中（用于修改的数据库）
 // input：车次编号、始发站、途经站、终到站、_LeaveTime(各站点发车时间、各站点运行到下一站点时间)、乘员定额、余票数量
 // output：NOSPACE：无可用空间，ERROR：对应车次头结点不存在，OK：正常
 Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
@@ -248,7 +249,7 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 	if (!NT) return NOSPACE; // 无可用空间
 	
 	// 该类别车次的头指针不存在
-	if (!(p = TM_GetHeadPointer(*_TrainNum))) 	{
+	if (!(p = TM_GetHeadPointer(_TrainNum))) 	{
 		SUB_TrainInfo* q;
 		q = TM_RequestNodeForTopNode();
 		if (!q) return NOSPACE; // 无可用空间可申请以创建头结点
@@ -268,7 +269,7 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 			case 'P': {VL_Ti_Lib->P = q; break; }
 		} // switch
 
-		p = TM_GetHeadPointer(*_TrainNum); // 重新定位p的指向
+		p = TM_GetHeadPointer(_TrainNum); // 重新定位p的指向
 
 	} // if (!(p = TM_GetHeadPointer(*_TrainNum)))
 
@@ -293,4 +294,11 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 }
 
 
+// 将车次信息结点新增进车次检索系统中
+// input：车次编号，站点
+// output：NOSPACE, OK
+Status TM_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
+{
+
+}
 

@@ -33,9 +33,6 @@
     <ClCompile Include="UserFunction.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Struct_Lib.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Basic_Function.c">
       <Filter>源文件</Filter>
     </ClCompile>
