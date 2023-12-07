@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Basic_Function.c" />
     <ClCompile Include="File_Operation.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Order_Manage.c" />

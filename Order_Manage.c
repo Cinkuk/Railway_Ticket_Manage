@@ -16,6 +16,7 @@
 
 #include "V_Lib.h"
 #include <stdlib.h>
+#include "F_Lib.h"
 
 // ³õÊ¼»¯VL_Or_Lib
 Status OM_InitOrder()
@@ -32,5 +33,6 @@ Status OM_InitOrder()
 	p->next = NULL;
 	return OK; 
 }
+
 
 

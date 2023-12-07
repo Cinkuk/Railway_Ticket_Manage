@@ -78,7 +78,7 @@ typedef struct WaitOeder {
 typedef struct SUB_TrainInfo {
 	char NodeKind; // 结点类别，H：头节点，E：数据元素结点
 	// 定义十位的指针数组
-	// 用于存放指向以0-9开头的车次数字最小的车次的指针，用于加快检索
+	// 用于存放指向以1-9开头的车次数字最小的车次的指针，用于加快检索，弃用第0位
 	struct SUB_TrainInfo* FirstNum[10];
 	char* TrainNum; // 车次
 	char* Start; // 始发站
