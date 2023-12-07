@@ -53,10 +53,10 @@ typedef struct LeaveTime {
 // 单一订单信息链表
 // 每一车次的订单信息链表独立
 typedef struct Order {
-	char* NodeKine; // 节点类别，H:头结点，E：数据元素结点
+	char* NodeKind; // 节点类别，H:头结点，E：数据元素结点
 	char* OrderNum; // 订单编号
 	char* TrainNum; // 车次
-	int phone; // 手机号
+	char* phone; // 手机号
 	char* Start; // 出发站
 	char* End; // 终点站
 	int TicketNum; // 订购车票张数
@@ -66,16 +66,17 @@ typedef struct Order {
 
 // 候补订单信息
 // 循环链表
-typedef struct WaitOeder {
-	char* NodeKine; // 节点类别，H:头结点，E：数据元素结点
+typedef struct WaitOrder {
+	char* NodeKind; // 节点类别，H:头结点，E：数据元素结点
 	char* OrderNum; // 订单编号
 	char* TrainNum; // 车次
-	int phone; // 手机号
+	char* phone; // 手机号
 	char* Start; // 出发站
 	char* End; // 终点站
 	int TicketNum; // 订购车票张数
 
 	struct WaitOrder* rear; // 候补订单尾指针，无候补时指向头结点
+	struct WaitOrder* next;
 }WaitOrder;
 
 // 存储车次信息
@@ -118,9 +119,12 @@ typedef struct TOP_TrainInfo {
 // 用于链接同一手机号下的所有订单
 typedef struct PhoneOrderList {
 	char* NodeKind; // 结点类别，H：头结点，E：数据元素结点
-	char OrderStatus; // 订单状态，F：正式订单，W：候补订单
+	char* OrderStatus; // 订单状态，F：正式订单，W：候补订单
 	Order* CurrentOrder; // 指向当前订单结点或候补订单结点
 	SUB_TrainInfo* Train; // 指向当前车次结点
+	char* LeaveStop; // 出发站
+	char* ArriveStop; // 到达站
+	int TicketAmount; // 订购票数
 
 	struct PhoneOrderList* NextOrder; // 同一手机号的下一订单
 }PhoneOrderList;
@@ -179,6 +183,7 @@ typedef struct TrainNumList
 	struct TrainNumList* next;
 }TrainNumList;
 
+// 站点编号列表
 typedef struct StopIndexDB
 {
 	char* NodeKind; // 结点类型，H：头结点，E：数据元素结点

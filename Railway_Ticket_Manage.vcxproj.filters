@@ -36,6 +36,9 @@
     <ClCompile Include="Basic_Function.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Search.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="V_Lib.h">

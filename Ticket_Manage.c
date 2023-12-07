@@ -29,7 +29,7 @@
 //
 // 新增车次
 // Status TM_NewTrain(char* , char* , StopName* , char* ,
-//	LeaveTime* , int , int )
+//	                  LeaveTime* , int , int )
 // 返回值：NOSPACE, OK
 // 
 // 
@@ -39,6 +39,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// 车票操作数据库部分
+// 
 // 申请SUB_TrainInfo类别的头结点，用于初始化FirstNum[]指针数组内的结点
 SUB_TrainInfo* TM_RequestSUBTrainHeadNode()
 {
@@ -121,7 +123,6 @@ Status TM_InitTicket()
 	TOP_TrainInfo* p;
 	p = (struct TOP_TrainInfo*)malloc(sizeof(struct TOP_TrainInfo));
 	if (!p) return NOSPACE; // 无可用空间分配
-	VL_Ti_Lib = p; // 赋值初始化VL_Ti_Lib
 
 	// 逐个初始化VL_Ti_Lib下的结点
 	for (index = 0; index < 11; index++)
@@ -148,6 +149,9 @@ Status TM_InitTicket()
 		} // switch
 	
 	} // for (index = 0; index < 11; index++)
+
+	VL_Ti_Lib = p; // 赋值初始化VL_Ti_Lib
+
 	return OK;
 
 } // Status InitTicket()
@@ -291,14 +295,5 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 	TM_InsertTrainNode(NT);
 
 	return OK;
-}
-
-
-// 将车次信息结点新增进车次检索系统中
-// input：车次编号，站点
-// output：NOSPACE, OK
-Status TM_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
-{
-
 }
 
