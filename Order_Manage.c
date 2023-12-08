@@ -27,6 +27,11 @@
 // input：手机号、车次、出发站、到达站、订票张数
 // return: NOSPACE, OK
 //
+// 查询候补订单能否候补并操作
+// Status OM_CheckWaitOrder(SearchWaitResult* SWR)
+// output: OK（有候补订单并成功候补），EMPTY（无可以进行候补操作的订单）
+// 
+// 
 //
 
 
@@ -100,16 +105,19 @@ char* OM_CreateOrderNum()
 Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	char* _LeaveStop, char* _ArriveStop, int _TicketSmount)
 {
-	Order* p;
-	char* _OrderNum;
-	SUB_TrainInfo* TrainNode;
-	PhoneOrder* PhoneNode;
+	Order* p; // 订单信息结点
+	OrderSet* t; // 订单编号池工作指针
+	char* _OrderNum; // 订单编号
+	SUB_TrainInfo* TrainNode; // 指向当前订单车次的车次信息头结点
+	PhoneOrder* PhoneNode; // 指向总订单信息结点
+	
+	t = VL_OrderID;
 
 	p = (Order*)malloc(sizeof(struct Order));
 
 	if (!p) return NOSPACE; // 无可用空间
 
-	PhoneOrderList* q; // 总订单结点
+	PhoneOrderList* q; // 订单信息结点
 	q = (PhoneOrderList*)malloc(sizeof(struct PhoneOrderList));
 
 	if (!q) return NOSPACE; //无可用空间
@@ -153,6 +161,20 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	p->next = TrainNode->TrainOrder->next;
 	TrainNode->TrainOrder->next = p;
 
+	// 订单信息结点p存入订单编号池内
+	while (t)
+	{
+		// t指向当前订单结点
+		if (strcmp(t->ID, _OrderNum) == 0)
+		{
+			t->OrderNode = p; // 将当前订单链接进订单池内
+			break; // 退出循环
+		}
+		// t指向下一张订单
+		t = t->next;
+	}
+
+
 	return OK;
 }
 
@@ -161,16 +183,19 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	char* _LeaveStop, char* _ArriveStop, int _TicketSmount)
 {
-	WaitOrder* p;
-	char* _OrderNum;
-	SUB_TrainInfo* TrainNode;
-	PhoneOrder* PhoneNode;
+	WaitOrder* p; // 订单信息结点
+	OrderSet* t; // 订单编号池工作指针
+	char* _OrderNum; // 订单编号
+	SUB_TrainInfo* TrainNode; // 指向当前订单车次的车次信息头结点
+	PhoneOrder* PhoneNode; // 指向总订单信息结点
+	
+	t = VL_OrderID;
 
 	p = (WaitOrder*)malloc(sizeof(struct WaitOrder));
 
 	if (!p) return NOSPACE; // 无可用空间
 
-	PhoneOrderList* q; // 总订单结点
+	PhoneOrderList* q; // 订单信息结点
 	q = (PhoneOrderList*)malloc(sizeof(struct PhoneOrderList));
 
 	if (!q) return NOSPACE; // 无可用空间
@@ -216,8 +241,25 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	p->next = TrainNode->TrainWaitOrder->rear->next;
 	TrainNode->TrainWaitOrder->rear->next = p;
 	TrainNode->TrainWaitOrder->rear = p;
+	
+	// 订单信息结点p存入订单编号池内
+	while (t)
+	{
+		// t指向当前订单结点
+		if (strcmp(t->ID, _OrderNum) == 0)
+		{
+			t->WaitOrderNode = p; // 将当前订单链接进订单池内
+			break; // 退出循环
+		}
+		// t指向下一张订单
+		t = t->next;
+	}
 
 	return OK;
 }
 
+// 查询候补订单能否候补并操作
+Status OM_CheckWaitOrder(SearchWaitResult* SWR)
+{
 
+}

@@ -179,6 +179,8 @@ typedef struct OrderSet
 {
 	// 订单编号格式为一位字母+9位数字
 	char ID[10];
+	Order* OrderNode;
+	WaitOrder* WaitOrderNode;
 	struct OrderSet* next;
 }OrderSet;
 
@@ -217,6 +219,13 @@ typedef struct SearchResult
 
 	struct SearchResult* NextResult;
 }SearchResult;
+
+// 候补订单查询返回结果
+typedef struct SearchWaitResult
+{
+	Order* TransOrder; // 转为正式订单的订单结点
+	struct SearchWaitResult* next;
+}SearchWaitResult;
 
 //////////
 // 变量

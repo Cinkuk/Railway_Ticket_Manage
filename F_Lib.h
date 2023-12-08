@@ -18,7 +18,7 @@ extern Status OM_InitOrder();
 extern char* OM_CreateOrderNum();
 extern Status OM_New_F_Order(char*, char*,char*, char*, int);
 extern Status OM_New_W_Order(char*, char*, char*, char*, int);
-
+extern Status OM_CheckWaitOrder(SearchWaitResult*);
 
 // Search.c
 extern TrainIndexNode* S_RequestTINode();
@@ -37,5 +37,9 @@ extern int BF_Get_Train_Number(char*);
 extern char* BF_Merge_Char(char[]);
 
 // UserFunction.c
-extern Status SearchStop(char*, char*, SearchResult*);
-
+extern Status UF_SearchStop(char*, char*, SearchResult*);
+extern PhoneOrderList* UF_GetOrderInfo(char* );
+extern PhoneOrderList* UF_GetPhoneOrder(char* );
+extern Status UF_New_F_Order(char*, char*, char*, int, char*);
+extern Status UF_New_W_Order(char*, char*, char*, int, char*);
+extern Status UF_New_W_Order(char*);

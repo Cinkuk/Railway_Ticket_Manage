@@ -1,21 +1,42 @@
 // 本文件存放的函数面向用户的操作
-// 本文件的函数名以'User_'开头
+// 本文件的函数名以'UF_'开头
 //
 // Test Status: Undo
 // Code Status: Undo
 //
 // 函数与功能对应：
 //
-// // 查询，输入出发地、目的地
+// 查询，输入出发地、目的地
 // Status SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 // 输入：出发站，到达站，返回结果结构体空指针
 // return：OK, ERROR（出发站不存在）, NOSPACE, EMPTY（无可用班次）
 // 
+// 查询订单
+// PhoneOrderList* UF_GetOrderInfo(char* _OrderNum)
+// input：订单号
+// return：PhoneOrderLIst* 结点指针, NULL(不存在的订单)
 // 
+// 查询手机号下的订单
+// PhoneOrderList* UF_GetPhoneOrder(char* _phone)
+// input：订单号
+// return：该手机号下订单的头结点指针，NULL（不存在的手机号)
 // 
+// 下正式订单
+// Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
+//	                     int _TicketNum, char* _phone)
+// input: 车次，出发站，到达站，订购票数，手机号
+// output: OK, ERROR, NOSPACE
 // 
+// 下候补订单
+// Status UF_New_W_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
+//	                     int _TicketNum, char* _phone)
+// input: 车次，出发站，到达站，订购票数，手机号
+// output: OK, ERROR, NOSPACE
 // 
-// 
+// 删除订单
+//Status UF_New_W_Order(char* OrderNum)
+// input: 订单号
+// output: OK, ERROR
 // 
 // 
 // 
@@ -32,7 +53,7 @@
 
 // 查询，输入出发地、目的地
 // return：OK, ERROR（出发站不存在）, NOSPACE, EMPTY（无可用班次）
-Status SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
+Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 {
 	StopIndexDB* LeaveStop; // 工作指针
 
@@ -195,6 +216,48 @@ Status SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 	else return OK;
 } // Status SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 
+// 查询订单
+// input：订单号
+// return：PhoneOrderLIst* 结点指针, NULL(不存在的订单)
+PhoneOrderList* UF_GetOrderInfo(char* _OrderNum)
+{
+
+}
+
+
+// 查询手机号下的订单
+// input：订单号
+// return：该手机号下订单的头结点指针，NULL（不存在的手机号)
+PhoneOrderList* UF_GetPhoneOrder(char* _phone)
+{
+
+}
+
+// 下正式订单
+// input: 车次，出发站，到达站，订购票数，手机号
+// output: OK, ERROR, NOSPACE
+Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
+	int _TicketNum, char* _phone)
+{
+
+}
+
+// 下候补订单
+// input: 车次，出发站，到达站，订购票数，手机号
+// output: OK, ERROR, NOSPACE
+Status UF_New_W_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
+	int _TicketNum, char* _phone)
+{
+
+}
+
+// 删除订单
+// input: 订单号
+// output: OK, ERROR
+Status UF_New_W_Order(char* OrderNum)
+{
+
+}
 
 
 
