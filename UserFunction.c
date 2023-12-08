@@ -34,7 +34,7 @@
 // output: OK, ERROR, NOSPACE
 // 
 // É¾³ý¶©µ¥
-//Status UF_New_W_Order(char* OrderNum)
+//Status UF_Delete_Order(char* OrderNum)
 // input: ¶©µ¥ºÅ
 // output: OK, ERROR
 // 
@@ -254,7 +254,7 @@ Status UF_New_W_Order(char* _TrainNum, char* _Leave, char* _Arrive,
 // É¾³ý¶©µ¥
 // input: ¶©µ¥ºÅ
 // output: OK, ERROR
-Status UF_New_W_Order(char* OrderNum)
+Status UF_Delete_Order(char* OrderNum)
 {
 
 }

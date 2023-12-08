@@ -42,4 +42,4 @@ extern PhoneOrderList* UF_GetOrderInfo(char* );
 extern PhoneOrderList* UF_GetPhoneOrder(char* );
 extern Status UF_New_F_Order(char*, char*, char*, int, char*);
 extern Status UF_New_W_Order(char*, char*, char*, int, char*);
-extern Status UF_New_W_Order(char*);
+extern Status UF_Delete_Order(char*);
