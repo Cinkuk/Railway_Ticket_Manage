@@ -65,7 +65,7 @@ char* OM_CreateOrderNum()
 
 		// 初始化为A000000001
 		node->ID[0] = 65; // 65为ASCII的A
-		for (int i = 1; i < 9; i++) node->ID[i] = 0;
+		for (int i = 1; i < 9; i++) node->ID[i] = 48; // 48为ASCII的0
 		node->ID[9] = 1;
 		node->next = NULL;
 		return BF_Merge_Char(node->ID);
@@ -82,7 +82,7 @@ char* OM_CreateOrderNum()
 
 	for (i = 9; i > 0; i--)
 	{
-		if (node->ID[i] > 9) // 需进位
+		if (node->ID[i] > 57) // >0需进位
 		{
 			node->ID[i] = 0;
 			node->ID[1 - 1] += 1;
