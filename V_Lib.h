@@ -120,7 +120,8 @@ typedef struct TOP_TrainInfo {
 typedef struct PhoneOrderList {
 	char* NodeKind; // 结点类别，H：头结点，E：数据元素结点
 	char* OrderStatus; // 订单状态，F：正式订单，W：候补订单
-	Order* CurrentOrder; // 指向当前订单结点或候补订单结点
+	Order* CurrentOrder; // 指向当前正式订单结点
+	WaitOrder* CurrentWaitOrder; // 指向当前候补订单结点
 	SUB_TrainInfo* Train; // 指向当前车次结点
 	char* LeaveStop; // 出发站
 	char* ArriveStop; // 到达站
@@ -173,6 +174,14 @@ typedef struct TrainIndexDB
 	TrainIndexNode* P;
 }TrainIndexDB;
 
+// 订单编号池
+typedef struct OrderSet
+{
+	// 订单编号格式为一位字母+9位数字
+	char ID[10];
+	struct OrderSet* next;
+}OrderSet;
+
 
 // 以站点搜索车次
 //
@@ -199,3 +208,4 @@ extern TOP_TrainInfo* VL_Ti_Lib; // 将车票车次变量在项目中共用
 extern PhoneOrder* VL_Or_Lib; // 将订单信息变量在项目中共用
 extern TrainIndexDB* VL_TI_DB; // 车次检索站点的数据库
 extern StopIndexDB* VL_SI_DB; // 站点检索车次的数据库
+extern OrderSet* VL_OrderID; // 订单编号池

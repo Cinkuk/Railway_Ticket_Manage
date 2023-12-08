@@ -51,7 +51,7 @@ TrainIndexNode* S_RequestTINode()
 	int i; // 索引变量
 
 	TrainIndexNode* node;
-	node = (TrainIndexNode*)mallooc(sizeof(struct TrainIndexNode));
+	node = (TrainIndexNode*)malloc(sizeof(struct TrainIndexNode));
 	StationList* namelist;
 	namelist = (StationList*)malloc(sizeof(struct StationList));
 
@@ -67,7 +67,7 @@ TrainIndexNode* S_RequestTINode()
 	for (i = 0; i < 10; i++)
 	{
 		TrainIndexNode* subnode;
-		subnode = (TrainIndexNode*)mallooc(sizeof(struct TrainIndexNode));
+		subnode = (TrainIndexNode*)malloc(sizeof(struct TrainIndexNode));
 		
 		if (!subnode) return NULL; // 无可用空间
 
@@ -170,12 +170,12 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 // output：对应头指针
 SUB_TrainInfo* S_GetTrainNode(char* _TrainNum)
 {
-
+	
 }
 
 // 根据手机号返回VL_Or_Lib下的手机号结点
 // output：对应数据元素结点指针（无则创建该数据元素结点）
 PhoneOrder* S_GetPhoneOrder(char* _phone)
 {
-
+	
 }

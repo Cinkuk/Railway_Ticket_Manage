@@ -18,4 +18,7 @@ PhoneOrder* VL_Or_Lib;
 TrainIndexDB* VL_TI_DB;
 
 // 以站点搜索车次
-StopIndexDB* VL_SI_SB;
+StopIndexDB* VL_SI_DB;
+
+// 订单编号池
+OrderSet* VL_OrderID;

@@ -52,10 +52,46 @@ Status OM_InitOrder()
 	return OK; 
 }
 
-// 创建唯一的订单编号
+// 申请唯一的订单编号
 char* OM_CreateOrderNum()
 {
+	int i; // 循环变量
+	if (!VL_OrderID) // 编号池为空
+	{
+		OrderSet* node;
+		node = (OrderSet*)malloc(sizeof(struct OrderSet));
 
+		if (!node) return NULL; // 无可用空间申请编号
+
+		// 初始化为A000000001
+		node->ID[0] = 65; // 65为ASCII的A
+		for (int i = 1; i < 9; i++) node->ID[i] = 0;
+		node->ID[9] = 1;
+		node->next = NULL;
+		return BF_Merge_Char(node->ID);
+	}
+	OrderSet* node;
+	node = (OrderSet*)malloc(sizeof(struct OrderSet));
+	if (!node) return NULL; // 无可用空间申请编号
+	
+	node->next = VL_OrderID;
+	for (i = 0; i < 9; i++) node->ID[i] = node->next->ID[i]; // 复制前一张订单的编号
+	VL_OrderID = node; // 插入为第一个结点
+	
+	node->ID[9] += 1;
+
+	for (i = 9; i > 0; i--)
+	{
+		if (node->ID[i] > 9) // 需进位
+		{
+			node->ID[i] = 0;
+			node->ID[1 - 1] += 1;
+		}
+	}
+
+	if (node->ID[0] > 90) return NULL; // 当前编号已超出最大值“Z999999999”
+
+	return BF_Merge_Char(node->ID);
 }
 
 // 创建新的正式订单
@@ -166,7 +202,7 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	PhoneNode->OrderList->NextOrder = q;
 	// 链接当前车次结点
 	q->Train = TrainNode; // 指向当前车次结点
-	q->CurrentOrder =  TrainNode->TrainWaitOrder; // 指向当前车次候补订单头结点
+	q->CurrentWaitOrder =  TrainNode->TrainWaitOrder; // 指向当前车次候补订单头结点
 	
 	// 该车次下的候补订单结点中，链接本张订单的结点
 	p->next = TrainNode->TrainWaitOrder->rear->next;

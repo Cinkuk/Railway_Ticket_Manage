@@ -35,4 +35,13 @@ int BF_Get_Train_Number(char* TrainNum)
 	return sum;
 }
 
+// 传入10位字符数组，输出字符串
+char* BF_Merge_Char(char in[])
+{
+	char* ch;
+	ch = (char*)malloc(sizeof(char) * 10);
+	int i;
+	for (i = 0; i < 10; i++) *(ch + i) = in[i];
+	return ch;
+}
 

@@ -5,6 +5,7 @@
 
 #include "V_Lib.h"
 #include "F_Lib.h"
+#include <stdio.h>
 
 void main()
 {

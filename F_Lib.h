@@ -34,5 +34,6 @@ extern PhoneOrder* S_GetPhoneOrder(char* );
 
 // Basic_Function.c
 extern int BF_Get_Train_Number(char*);
+extern char* BF_Merge_Char(char[]);
 
 
