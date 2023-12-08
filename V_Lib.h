@@ -188,6 +188,7 @@ typedef struct OrderSet
 // 车次编号列表
 typedef struct TrainNumList
 {
+	// 不设头结点
 	char* CurNum; // 该结点车次编号
 	struct TrainNumList* next;
 }TrainNumList;
@@ -201,6 +202,21 @@ typedef struct StopIndexDB
 	struct StopIndexDB* next; // 下一站点
 }StopIndexDB;
 
+// 搜寻结果
+typedef struct SearchResult
+{
+	// 设头结点
+	char* TrainNum;  // 车次编号
+	char* Leave; // 出发地
+	char* Arrive; // 到达地
+	int LeaveTime[2]; // 出发时间
+	int ToNextMin;
+	int ArriveTime[2]; // 到达时间
+
+	SUB_TrainInfo* TrainNode; // 车次信息结点
+
+	struct SearchResult* NextResult;
+}SearchResult;
 
 //////////
 // 变量

@@ -36,4 +36,6 @@ extern PhoneOrder* S_GetPhoneOrderNode(char* );
 extern int BF_Get_Train_Number(char*);
 extern char* BF_Merge_Char(char[]);
 
+// UserFunction.c
+extern Status SearchStop(char*, char*, SearchResult*);
 
