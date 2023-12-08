@@ -8,7 +8,7 @@
 extern SUB_TrainInfo* TM_RequestSUBTrainHeadNode();
 extern SUB_TrainInfo* TM_RequestNodeForTopNode();
 extern Status TM_InitTicket();
-extern SUB_TrainInfo* TM_GetHeadPointer(char*);
+extern SUB_TrainInfo* TM_Get_TiLib_HeadPointer(char*);
 extern Status TM_InsertTrainNode(SUB_TrainInfo*);
 extern Status TM_NewTrain(char* , char* , StopName* , char* ,
 	LeaveTime* , int , int );
@@ -22,12 +22,12 @@ extern Status OM_New_W_Order(char*, char*, char*, char*, int);
 
 // Search.c
 extern TrainIndexNode* S_RequestTINode();
-extern TrainIndexNode* S_GetTIHeadPointer(char*);
+extern TrainIndexNode* S_Get_TIDB_HeadPointer(char*);
 extern Status S_InitTIDB();
 extern Status S_InitSIDB();
 extern Status S_AddTrainToSearchDB(char* , StopName* );
 extern SUB_TrainInfo* S_GetTrainNode(char* );
-extern PhoneOrder* S_GetPhoneOrder(char* );
+extern PhoneOrder* S_GetPhoneOrderNode(char* );
 
 
 

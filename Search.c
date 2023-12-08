@@ -31,17 +31,18 @@
 // 根据车次编号返回VL_Ti_Lib下的车次结点
 // SUB_TrainInfo* S_GetTrainNode(char*)
 // input：车次编号
-// return：对应头指针
+// return：对应头指针, NULL
 //
 // 根据手机号返回VL_Or_Lib下的手机号结点
 // PhoneOrder* S_GetPhoneOrder(char*)
 // input：电话
-// return：对应数据元素结点指针（无则创建该数据元素结点）
+// return：对应数据元素结点指针（无则创建该数据元素结点）, NULL（无现成结点，也无空间创建结点）
 //
 
 #include "F_Lib.h"
 #include "V_Lib.h"
 #include <stdlib.h>
+#include <string.h>
 
 // 初始化部分
 
@@ -84,7 +85,7 @@ TrainIndexNode* S_RequestTINode()
 }
 
 // 返回VL_TI_DB中车次类别的入口指针
-TrainIndexNode* S_GetTIHeadPointer(char* First)
+TrainIndexNode* S_Get_TIDB_HeadPointer(char* First)
 {
 	switch (*First)
 	{
@@ -159,6 +160,120 @@ Status S_InitSIDB()
 	return OK;
 }
 
+// 赋值VL_Or_Lib中数据元素的头结点
+Status S_Fill_OrLib_HeadNode(PhoneOrderList* p)
+{
+	p->NodeKind = "H";
+	p->OrderStatus = "HN";
+	p->CurrentOrder = p->CurrentWaitOrder = NULL;
+	p->Train = NULL;
+	p->LeaveStop = p->ArriveStop = NULL;
+	p->TicketAmount = 0;
+	p->NextOrder = NULL;
+	return OK;
+}
+
+// 根据车次编号返回VL_Ti_Lib下的车次结点
+// output：对应头指针
+SUB_TrainInfo* S_GetTrainNode(char* _TrainNum)
+{
+	char First = *_TrainNum; // 车次编号首字母
+	SUB_TrainInfo* p, *q; // 工作指针
+	int i = 0; // 循环变量
+	
+	q = NULL; // q为返回值
+
+	if (!(p = TM_Get_TiLib_HeadPointer(_TrainNum))); // p指向对应车次类别头结点
+	return NULL; // 对应类别头结点不存在
+
+	p = p->next;
+	while (p) // 遍历车次信息链表
+	{
+		// 车次编号格式为一位字母+4位数字
+		// 逐位比较车次数字
+		for (i = 0; i <= 5; i++) 
+		{
+			// 车次逐位比较均相同
+			// 退出while循环并返回地址
+			if (*(p->TrainNum + i) == '\0' && *(_TrainNum + i) == '\0')
+			{
+				q = p;
+				goto RETURN;
+			}
+			else if (*(p->TrainNum + i) == *(_TrainNum + i)); // 当前位相同，比较下一位
+			else // 当前位不同，p指向下一位，本轮比较终止
+			{
+				p = p->next;
+				break;
+			}
+		} // for (i = 1; i <= 4; i++) 
+	} // while (p)
+
+	// 只有找到匹配项才会返回对应指针，否则均返回空指针
+RETURN: return q;
+
+	// 此时q为空指针，由于不符合进入RETURN的条件，且函数需要返回值，下面的语句用于q=NULL时的返回
+	return q;
+}	
+
+// 根据手机号返回VL_Or_Lib下的手机号结点
+// output：对应数据元素结点指针（无则创建该数据元素结点）
+PhoneOrder* S_GetPhoneOrderNode(char* _phone)
+{
+	PhoneOrder* p, *PONode; // 工作指针
+	PhoneOrderList* q; // 用于新建结点
+	int i; // 循环变量
+
+	p = VL_Or_Lib->next; // p指向订单链表首元结点
+
+	while (p) // 遍历订单链表
+	{
+		for (i = 0; i <= 11; i++) // 手机号为11位
+		{
+			// 手机号逐位比较均相同
+			// 退出while循环并返回地址
+			if (*(p->phone + i) == '\0' && *(_phone + i) == '\0') // 手机逐位比较均相同
+			{
+				goto RETURN;
+			}
+			else if (*(p->phone + i) == *(_phone + i)); // 当前位相同，比较下一位
+			else // 当前位不同，p指向下一结点，本轮比较终止
+			{
+				p = p->next;
+				break;
+			}
+		} // for (i = 0; i <= 11; i++) 
+	} // while (p)
+
+	if (!p) // 订单链表中无此手机号结点，创建并返回
+	{
+		q = (PhoneOrderList*)malloc(sizeof(struct PhoneOrderList));
+		if (!q) { goto RETURN; } // 无可用空间，返回空指针
+
+		PONode = (PhoneOrder*)malloc(sizeof(struct PhoneOrder));
+		if (!PONode) { goto RETURN; } // 无可用空间，返回空指针
+		
+		// 赋值头结点
+		S_Fill_OrLib_HeadNode(q);
+		PONode->NodeKind = "H";
+		strcpy(PONode->phone, _phone);
+		PONode->OrderList = q;
+		PONode->next = NULL;
+
+		// q插入为VL_Or_lib的首元结点
+		p = VL_Or_Lib;
+		PONode->next = p->next;
+		p->next = PONode;
+
+		// 返回头结点地址
+		p = PONode;
+		goto RETURN;
+	}
+
+	// 返回结点地址
+RETURN:return p;
+}
+
 // 将车次信息结点新增进车次检索系统中
 // input：车次编号，站点
 Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
@@ -166,16 +281,3 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 	
 }
 
-// 根据车次编号返回VL_Ti_Lib下的车次结点
-// output：对应头指针
-SUB_TrainInfo* S_GetTrainNode(char* _TrainNum)
-{
-	
-}
-
-// 根据手机号返回VL_Or_Lib下的手机号结点
-// output：对应数据元素结点指针（无则创建该数据元素结点）
-PhoneOrder* S_GetPhoneOrder(char* _phone)
-{
-	
-}

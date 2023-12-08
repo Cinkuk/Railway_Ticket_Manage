@@ -15,7 +15,6 @@
 // char* OM_CreateOrderNum()
 // return: 订单编号字符串指针
 //
-//
 // 创建新的正式订单
 // Status OM_New_F_Order(char* _phone, char* _TrainNum,
 //	                     char* _LeaveStop, char* _ArriveStop, int _TicketSmount)
@@ -32,8 +31,10 @@
 
 
 #include "V_Lib.h"
-#include <stdlib.h>
 #include "F_Lib.h"
+#include <stdlib.h>
+#include <string.h>
+
 
 // 初始化VL_Or_Lib
 Status OM_InitOrder()
@@ -116,7 +117,10 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	// 申请订单编号和需要的结点地址
 	_OrderNum = OM_CreateOrderNum();
 	TrainNode = S_GetTrainNode(_TrainNum);
-	PhoneNode = S_GetPhoneOrder(_phone);
+	PhoneNode = S_GetPhoneOrderNode(_phone);
+
+	// TrainNode or PhoneNode为空结点或无可用空间建立订单编号_OrderNum
+	if (!_OrderNum || !TrainNode || !PhoneNode) return NOSPACE; 
 
 	// 结点赋值
 	// 订单类型
@@ -124,16 +128,16 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	q->NodeKind = "E";
 	q->OrderStatus =  "F";
 
-	p->OrderNum = _OrderNum; // 订单编号
-	p->TrainNum = _TrainNum; // 车次编号
-	p->phone = _phone; // 手机号
+	strcpy(p->OrderNum, _OrderNum); // 订单编号
+	strcpy(p->TrainNum, _TrainNum); // 车次编号
+	strcpy(p->phone, _phone); // 手机号
 
 	// 出发站
-	p->Start = _LeaveStop;
-	q->LeaveStop = _LeaveStop;
+	strcpy(p->Start, _LeaveStop);
+	strcpy(q->LeaveStop, _LeaveStop);
 	// 到达站
-	p->End = _ArriveStop;
-	q->ArriveStop = _ArriveStop;
+	strcpy(p->End, _ArriveStop);
+	strcpy(q->ArriveStop, _ArriveStop);
 	// 票数
 	p->TicketNum = _TicketSmount;
 	q->TicketAmount = _TicketSmount;
@@ -174,7 +178,10 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	// 申请订单编号和需要的结点地址
 	_OrderNum = OM_CreateOrderNum();
 	TrainNode = S_GetTrainNode(_TrainNum);
-	PhoneNode = S_GetPhoneOrder(_phone);
+	PhoneNode = S_GetPhoneOrderNode(_phone);
+
+	// TrainNode or PhoneNode为空结点或无可用空间建立订单编号_OrderNum
+	if (!_OrderNum || !TrainNode || !PhoneNode) return NOSPACE; 
 
 	// 结点赋值
 	// 订单类型
@@ -182,16 +189,17 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	q->NodeKind = "E";
 	q->OrderStatus = "W";
 
-	p->OrderNum = _OrderNum; // 订单编号
-	p->TrainNum = _TrainNum; // 车次编号
-	p->phone = _phone; // 手机号
+	strcpy(p->OrderNum, _OrderNum); // 订单编号
+	strcpy(p->TrainNum, _TrainNum); // 车次编号
+	strcpy(p->phone, _phone); // 手机号
 
 	// 出发站
-	p->Start = _LeaveStop;
-	q->LeaveStop = _LeaveStop;
+	strcpy(p->Start, _LeaveStop);
+	strcpy(q->LeaveStop, _LeaveStop);
 	// 到达站
-	p->End = _ArriveStop;
-	q->ArriveStop = _ArriveStop;
+	strcpy(p->End, _ArriveStop);
+	strcpy(q->ArriveStop, _ArriveStop);
+	
 	// 票数
 	p->TicketNum = _TicketSmount;
 	q->TicketAmount = _TicketSmount;
@@ -206,6 +214,7 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	
 	// 该车次下的候补订单结点中，链接本张订单的结点
 	p->next = TrainNode->TrainWaitOrder->rear->next;
+	TrainNode->TrainWaitOrder->rear->next = p;
 	TrainNode->TrainWaitOrder->rear = p;
 
 	return OK;

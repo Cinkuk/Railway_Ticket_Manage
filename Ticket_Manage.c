@@ -39,6 +39,7 @@
 #include "F_Lib.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 // 车票操作数据库部分
 // 
@@ -158,7 +159,7 @@ Status TM_InitTicket()
 } // Status InitTicket()
 
 // 返回VL_Ti_Lib中对应车次开头的头指针
-SUB_TrainInfo* TM_GetHeadPointer(char* FirstC)
+SUB_TrainInfo* TM_Get_TiLib_HeadPointer(char* FirstC)
 {
 	switch (*FirstC)
 	{
@@ -184,7 +185,7 @@ Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 	SUB_TrainInfo* p; // 工作指针，最终指向对应车次类别下，与当前车次数字开头相同的最小车次结点
 	int PNum, NextNum; // 存放p指向结点车次数值，p下一结点车次数值
 	int HNum; // 车次编号数字部分最高位
-	p = TM_GetHeadPointer(NT->TrainNum); // 指向对应车次类别的头结点
+	p = TM_Get_TiLib_HeadPointer(NT->TrainNum); // 指向对应车次类别的头结点
 
 	if (!p) return ERROR; // 目标结点不存在
 
@@ -194,7 +195,7 @@ Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 	// 目标结点不存在，新增头结点后，将NT链接在头结点之后
 	if (!p)
 	{
-		p = TM_GetHeadPointer(NT->TrainNum); // 指向类别开头
+		p = TM_Get_TiLib_HeadPointer(NT->TrainNum); // 指向类别开头
 		p->FirstNum[HNum] = TM_RequestSUBTrainHeadNode();
 		if (!(p->FirstNum[HNum])) return NOSPACE; // 无可用空间分配
 
@@ -250,11 +251,14 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 	LeaveTime* _LeaveTime, int _OccuQuota, int _SurpTick)
 {
 	SUB_TrainInfo* NT, *p; // NT为新结点指针，p为工作指针
+	Order* OrNode; // 新正式订单头结点
+	WaitOrder* WaOrNode; // 新候补订单头结点
 	NT = (SUB_TrainInfo*)malloc(sizeof(struct SUB_TrainInfo));
 	if (!NT) return NOSPACE; // 无可用空间
 	
 	// 该类别车次的头指针不存在
-	if (!(p = TM_GetHeadPointer(_TrainNum))) 	{
+	if (!(p = TM_Get_TiLib_HeadPointer(_TrainNum)))
+	{
 		SUB_TrainInfo* q;
 		q = TM_RequestNodeForTopNode();
 		if (!q) return NOSPACE; // 无可用空间可申请以创建头结点
@@ -274,21 +278,49 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 			case 'P': {VL_Ti_Lib->P = q; break; }
 		} // switch
 
-		p = TM_GetHeadPointer(_TrainNum); // 重新定位p的指向
+		p = TM_Get_TiLib_HeadPointer(_TrainNum); // 重新定位p的指向
 
 	} // if (!(p = TM_GetHeadPointer(*_TrainNum)))
 
 	// 写入车次信息进NT
 	NT->NodeKind = "E";
-	NT->Start = _Start;
+	strcpy(NT->TrainNum, _TrainNum);
+	strcpy(NT->Start, _Start);
 	NT->Stop = _Stop;
-	NT->End = _End;
+	strcpy(NT->End, _End);
 	NT->StationLeaveTime = _LeaveTime;
 	NT->OccupantQuota = _OccuQuota;
 	NT->SurplusTicket = _SurpTick;
+	
+	// 正式订单头结点
+	// 初始化正式订单头结点
+	OrNode = (Order*)malloc(sizeof(Order));
+	if (!OrNode) return NOSPACE; //无可用空间
+	
+	// 赋值
+	OrNode->NodeKind = "H";
+	// 所有字符串赋值为空
+	OrNode->OrderNum = OrNode->TrainNum = OrNode->phone = OrNode->Start = OrNode->End = '\0';
+	OrNode->TicketNum = -1;
+	OrNode->next = NULL;
 
-	NT->TrainOrder = NULL;
-	NT->TrainWaitOrder = NULL;
+	// 候补订单头结点
+	// 初始化候补订单头结点
+	WaOrNode = (WaitOrder*)malloc(sizeof(WaitOrder));
+	if (!OrNode) return NOSPACE; //无可用空间
+
+	// 赋值
+	WaOrNode->NodeKind = "H";
+	// 所有字符串赋值为空
+	WaOrNode->OrderNum = WaOrNode->TrainNum = WaOrNode->phone = WaOrNode->Start = WaOrNode->End = '\0';
+	WaOrNode->TicketNum = -1;
+	// 尾指针指向本头结点，next指向本头结点
+	WaOrNode->rear = WaOrNode;
+	WaOrNode->next = WaOrNode;
+
+	// 头结点赋值
+	NT->TrainOrder = OrNode;
+	NT->TrainWaitOrder = WaOrNode;
 
 	NT->next = NULL;
 
