@@ -18,7 +18,7 @@
 // 
 // 查询手机号下的订单
 // PhoneOrderList* UF_GetPhoneOrder(char* _phone)
-// input：订单号
+// input：手机号
 // return：该手机号下订单的头结点指针，NULL（不存在的手机号)
 // 
 // 下正式订单
@@ -221,12 +221,12 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 // return：PhoneOrderLIst* 结点指针, NULL(不存在的订单)
 PhoneOrderList* UF_GetOrderInfo(char* _OrderNum)
 {
-
+	
 }
 
 
 // 查询手机号下的订单
-// input：订单号
+// input：手机号
 // return：该手机号下订单的头结点指针，NULL（不存在的手机号)
 PhoneOrderList* UF_GetPhoneOrder(char* _phone)
 {

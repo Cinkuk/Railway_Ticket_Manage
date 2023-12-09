@@ -167,6 +167,7 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 		// t指向当前订单结点
 		if (strcmp(t->ID, _OrderNum) == 0)
 		{
+			t->OrderKind = "F"; // 订单类型为正式订单
 			t->OrderNode = p; // 将当前订单链接进订单池内
 			break; // 退出循环
 		}
@@ -248,6 +249,7 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 		// t指向当前订单结点
 		if (strcmp(t->ID, _OrderNum) == 0)
 		{
+			t->OrderKind = "W"; // 订单类型为候补订单
 			t->WaitOrderNode = p; // 将当前订单链接进订单池内
 			break; // 退出循环
 		}

@@ -97,6 +97,8 @@ SUB_TrainInfo* TM_RequestNodeForTopNode()
 		{
 			q->FirstNum[i] = TM_RequestSUBTrainHeadNode();
 			if (!(q->FirstNum[i])) return NULL; // 无可用空间分配
+			q->FirstNum[i]->NodeKind = "H";
+
 		}
 
 		q->TrainNum = "HeadNode";
@@ -116,10 +118,7 @@ SUB_TrainInfo* TM_RequestNodeForTopNode()
 // 初始化VL_Ti_Lib
 Status TM_InitTicket()
 {
-	// 可能的异常：
-	// p q sn lt无可用空间分配
-
-	int index; // 循环变量
+	int index, i; // 循环变量
 
 	// 申请空间存储车次信息结构体
 	TOP_TrainInfo* p;
