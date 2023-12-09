@@ -104,7 +104,7 @@ int BF_Partition(SearchResult* A, int p, int r, int KeyKind)
 				ptr_i = ptr_i->NextResult;
 				// exchange A[j] with A[i]
 				temp = ptr_j;
-				ptr_j - ptr_i;
+				ptr_j = ptr_i;
 				ptr_i = temp;
 			
 
@@ -122,7 +122,7 @@ int BF_Partition(SearchResult* A, int p, int r, int KeyKind)
 		ptr_i = ptr_i->NextResult;
 		// exchange 
 		temp = ptr_j;
-		ptr_j - ptr_i;
+		ptr_j = ptr_i;
 		ptr_i = temp;
 		
 		return (++i);
@@ -141,7 +141,7 @@ int BF_Partition(SearchResult* A, int p, int r, int KeyKind)
 				ptr_i = ptr_i->NextResult;
 				// exchange A[j] with A[i]
 				temp = ptr_j;
-				ptr_j - ptr_i;
+				ptr_j = ptr_i;
 				ptr_i = temp;
 			
 
@@ -159,7 +159,7 @@ int BF_Partition(SearchResult* A, int p, int r, int KeyKind)
 		ptr_i = ptr_i->NextResult;
 		// exchange 
 		temp = ptr_j;
-		ptr_j - ptr_i;
+		ptr_j = ptr_i;
 		ptr_i = temp;
 		
 		return (++i);

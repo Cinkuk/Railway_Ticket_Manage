@@ -36,5 +36,5 @@ Status SaveToHD()
 // ¥”¥≈≈Ã∂¡»°
 Status LoadFromHD()
 {
-
+	
 }
