@@ -103,7 +103,7 @@ char* OM_CreateOrderNum()
 // 创建新的正式订单
 // input：手机号、车次、出发站、到达站、订票张数
 Status OM_New_F_Order(char* _phone, char* _TrainNum,
-	char* _LeaveStop, char* _ArriveStop, int _TicketSmount)
+	char* _LeaveStop, char* _ArriveStop, int _TicketAmount)
 {
 	Order* p; // 订单信息结点
 	OrderSet* t; // 订单编号池工作指针
@@ -147,8 +147,10 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	strcpy(p->End, _ArriveStop);
 	strcpy(q->ArriveStop, _ArriveStop);
 	// 票数
-	p->TicketNum = _TicketSmount;
-	q->TicketAmount = _TicketSmount;
+	p->TicketNum = _TicketAmount;
+	q->TicketAmount = _TicketAmount;
+	// 改余票
+	TrainNode->SurplusTicket -= _TicketAmount;
 
 	// 总订单结点指针链接
 	// 链接同一手机号下的其他订单
@@ -169,6 +171,7 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 		{
 			t->OrderKind = "F"; // 订单类型为正式订单
 			t->OrderNode = p; // 将当前订单链接进订单池内
+			t->WaitOrderNode = NULL;
 			break; // 退出循环
 		}
 		// t指向下一张订单
@@ -182,7 +185,7 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 // 创建新的候补订单
 // input：手机号、车次、出发站、到达站、订票张数
 Status OM_New_W_Order(char* _phone, char* _TrainNum,
-	char* _LeaveStop, char* _ArriveStop, int _TicketSmount)
+	char* _LeaveStop, char* _ArriveStop, int _TicketAmount)
 {
 	WaitOrder* p; // 订单信息结点
 	OrderSet* t; // 订单编号池工作指针
@@ -227,8 +230,8 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	strcpy(q->ArriveStop, _ArriveStop);
 	
 	// 票数
-	p->TicketNum = _TicketSmount;
-	q->TicketAmount = _TicketSmount;
+	p->TicketNum = _TicketAmount;
+	q->TicketAmount = _TicketAmount;
 
 	// 总订单结点指针链接
 	// 链接同一手机号下的其他订单

@@ -30,16 +30,18 @@ extern SUB_TrainInfo* S_GetTrainNode(char* );
 extern PhoneOrder* S_GetPhoneOrderNode(char* );
 
 
-
-
 // Basic_Function.c
 extern int BF_Get_Train_Number(char*);
 extern char* BF_Merge_Char(char[]);
+extern void BF_QuickSort(SearchResult*, int, int, int);
+
 
 // UserFunction.c
 extern Status UF_SearchStop(char*, char*, SearchResult*);
-extern PhoneOrderList* UF_GetOrderInfo(char* );
+extern int UF_GetOrderInfo(char*, void*);
 extern PhoneOrderList* UF_GetPhoneOrder(char* );
 extern Status UF_New_F_Order(char*, char*, char*, int, char*);
 extern Status UF_New_W_Order(char*, char*, char*, int, char*);
 extern Status UF_Delete_Order(char*);
+extern Status UF_LeaveTimeSort(SearchResult*);
+extern Status UF_RunTimeSort(SearchResult* );

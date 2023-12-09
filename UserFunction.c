@@ -121,17 +121,6 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 		CurTrainNode = S_GetTrainNode(CurTrain);
 		CurStopList = CurTrainNode->StationLeaveTime;
 		
-#if 0
-		// 比较出发站、终点站与车次各站点
-		// 出发站与车次终点站相等
-		if (strcmp(_Leave, CurTrainNode->Start) == 0)
-		{
-			Index_L = Index;
-			
-			Index++;
-		}
-#endif
-
 		CurStop = CurStopList->name;
 		// 遍历途径站点
 		while (CurStopList)
@@ -166,11 +155,6 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 			Index++;
 		} // while (CurStopList)
 
-#if 0
-		// 终点站与终到站相同
-		if (strcmp(_Leave, CurTrainNode->End) == 0) Index_A = Index;
-#endif
-		
 		// 出发站和终点站均找到
 		// 运行顺序为出发站前往终点站
 		// 将查找结果写入搜寻结果中
@@ -178,7 +162,7 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 			Index_L < Index_A)
 		{
 			// 为SR分配空间，无可用空间则返回空指针
-			if (!(NEW_SR = (SearchResult*)malloc(sizeof(SearchResult)))) return NULL;
+			if (!(NEW_SR = (SearchResult*)malloc(sizeof(SearchResult)))) return NOSPACE;
 			NEW_SR->TrainNum = CurTrain; // 车次编号
 			NEW_SR->Leave = _Leave; // 出发地
 			NEW_SR->Arrive = _Arrive; // 到达地
@@ -224,7 +208,7 @@ int UF_GetOrderInfo(char* _OrderNum, void* ResultPtr )
 	OrderSet* p; // 工作指针
 	p = VL_OrderID;
 
-	while (p)
+	while (p) // 遍历订单池
 	{
 		if (strcmp(p->ID, _OrderNum) == 0) // 匹配到订单
 		{
@@ -239,7 +223,9 @@ int UF_GetOrderInfo(char* _OrderNum, void* ResultPtr )
 				return 2;
 			}
 		} // 	if (strcmp(p->ID, _OrderNum) == 0)
-	}
+
+		p = p->next; // 下一张单
+	} // while (p)
 
 	// 匹配不到订单
 	ResultPtr = NULL;
@@ -251,7 +237,21 @@ int UF_GetOrderInfo(char* _OrderNum, void* ResultPtr )
 // return：该手机号下订单的头结点指针，NULL（不存在的手机号)
 PhoneOrderList* UF_GetPhoneOrder(char* _phone)
 {
-	
+	PhoneOrder* p; // 工作指针
+	p = VL_Or_Lib->next; // 指向订单数据库首元结点
+
+	while (p) // 遍历订单数据库
+	{
+		if (strcmp(p->phone, _phone) == 0) // 匹配到手机号
+		{
+			return p->OrderList;
+		}
+		else // 下一张单
+			p = p->next;
+	}
+
+	// 无此手机号
+	return NULL;
 }
 
 // 下正式订单
@@ -260,7 +260,10 @@ PhoneOrderList* UF_GetPhoneOrder(char* _phone)
 Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
 	int _TicketNum, char* _phone)
 {
-
+	int ReturnStatus;
+	ReturnStatus = OM_New_F_Order(_phone, _TrainNum, _Leave, _Arrive, _TicketNum);
+	if (ReturnStatus == OK) return OK;
+	else return ERROR;
 }
 
 // 下候补订单
@@ -269,7 +272,10 @@ Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive,
 Status UF_New_W_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
 	int _TicketNum, char* _phone)
 {
-
+	int ReturnStatus;
+	ReturnStatus = OM_New_W_Order(_phone, _TrainNum, _Leave, _Arrive, _TicketNum);
+	if (ReturnStatus == OK) return OK;
+	else return ERROR;
 }
 
 // 删除订单
@@ -277,8 +283,41 @@ Status UF_New_W_Order(char* _TrainNum, char* _Leave, char* _Arrive,
 // output: OK, ERROR
 Status UF_Delete_Order(char* OrderNum)
 {
+	
+}
 
+// 按照出发时间递增排序
+Status UF_LeaveTimeSort(SearchResult* CurRes)
+{
+	if (!CurRes->NextResult) return ERROR; // 首元结点为空
+	// 计算长度
+	int len = 0;
+	SearchResult* p = CurRes->NextResult; // 工作指针指向首元结点
+	while (p)
+	{
+		len++;
+		p = p->NextResult;
+	}
+	BF_QuickSort(CurRes, 1, len, 0);
+
+	return OK;
 }
 
 
+// 按照运行时间递增排序
+Status UF_RunTimeSort(SearchResult* CurRes)
+{
+	if (!CurRes->NextResult) return ERROR; // 首元结点为空
+	// 计算长度
+	int len = 0;
+	SearchResult* p = CurRes->NextResult; // 工作指针指向首元结点
+	while (p)
+	{
+		len++;
+		p = p->NextResult;
+	}
+	BF_QuickSort(CurRes, 1, len, 1);
+
+	return OK;
+}
 

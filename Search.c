@@ -165,7 +165,8 @@ Status S_Fill_OrLib_HeadNode(PhoneOrderList* p)
 {
 	p->NodeKind = "H";
 	p->OrderStatus = "HN";
-	p->CurrentOrder = p->CurrentWaitOrder = NULL;
+	p->CurrentOrder = NULL;
+	p->CurrentWaitOrder = NULL;
 	p->Train = NULL;
 	p->LeaveStop = p->ArriveStop = NULL;
 	p->TicketAmount = 0;

@@ -9,6 +9,9 @@
 // 编译指令
 // 防止结构体重复定义
 #pragma once
+// 允许使用strcpy
+#define _CRT_SECURE_NO_WARNINGS
+
 
 //////////
 // 常量
