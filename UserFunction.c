@@ -12,9 +12,9 @@
 // return：OK, ERROR（出发站不存在）, NOSPACE, EMPTY（无可用班次）
 // 
 // 查询订单
-// PhoneOrderList* UF_GetOrderInfo(char* _OrderNum)
+// int UF_GetOrderInfo(char* _OrderNum, void* ResultPtr )
 // input：订单号
-// return：PhoneOrderLIst* 结点指针, NULL(不存在的订单)
+// return：1:正式订单，2：候补订单，3：无此订单
 // 
 // 查询手机号下的订单
 // PhoneOrderList* UF_GetPhoneOrder(char* _phone)
@@ -218,19 +218,40 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 
 // 查询订单
 // input：订单号
-// return：PhoneOrderLIst* 结点指针, NULL(不存在的订单)
-PhoneOrderList* UF_GetOrderInfo(char* _OrderNum)
+// return：1:正式订单，2：候补订单，3：无此订单
+int UF_GetOrderInfo(char* _OrderNum, void* ResultPtr )
 {
-	
-}
+	OrderSet* p; // 工作指针
+	p = VL_OrderID;
 
+	while (p)
+	{
+		if (strcmp(p->ID, _OrderNum) == 0) // 匹配到订单
+		{
+			if (strcmp(p->OrderKind, "F") == 0) // 正式订单
+			{
+				ResultPtr = p->OrderNode;
+				return 1;
+			}
+			else if (strcmp(p->OrderKind, "W") == 0) // 候补订单
+			{
+				ResultPtr = p->WaitOrderNode;
+				return 2;
+			}
+		} // 	if (strcmp(p->ID, _OrderNum) == 0)
+	}
+
+	// 匹配不到订单
+	ResultPtr = NULL;
+	return 3;
+}
 
 // 查询手机号下的订单
 // input：手机号
 // return：该手机号下订单的头结点指针，NULL（不存在的手机号)
 PhoneOrderList* UF_GetPhoneOrder(char* _phone)
 {
-
+	
 }
 
 // 下正式订单
