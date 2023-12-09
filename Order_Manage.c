@@ -107,7 +107,7 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 {
 	Order* p; // 订单信息结点
 	OrderSet* t; // 订单编号池工作指针
-	char* _OrderNum; // 订单编号
+	char* _OrderNum = (char*)malloc(sizeof(char)*STRLENGTH); // 订单编号
 	SUB_TrainInfo* TrainNode; // 指向当前订单车次的车次信息头结点
 	PhoneOrder* PhoneNode; // 指向总订单信息结点
 	
@@ -185,7 +185,7 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 {
 	WaitOrder* p; // 订单信息结点
 	OrderSet* t; // 订单编号池工作指针
-	char* _OrderNum; // 订单编号
+	char* _OrderNum = (char*)malloc(sizeof(char) * STRLENGTH); // 订单编号
 	SUB_TrainInfo* TrainNode; // 指向当前订单车次的车次信息头结点
 	PhoneOrder* PhoneNode; // 指向总订单信息结点
 	

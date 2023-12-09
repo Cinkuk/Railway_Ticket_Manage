@@ -22,3 +22,5 @@ StopIndexDB* VL_SI_DB;
 
 // ¶©µ¥±àºÅ³Ø
 OrderSet* VL_OrderID;
+
+

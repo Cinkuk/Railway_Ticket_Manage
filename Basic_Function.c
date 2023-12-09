@@ -12,6 +12,8 @@
 //
 //
 
+# include "V_Lib.h"
+
 // 提取车次中的数字
 int BF_Get_Train_Number(char* TrainNum)
 {
@@ -39,9 +41,10 @@ int BF_Get_Train_Number(char* TrainNum)
 char* BF_Merge_Char(char in[])
 {
 	char* ch;
-	ch = (char*)malloc(sizeof(char) * 10);
+	ch = (char*)malloc(sizeof(char) * STRLENGTH);
 	int i;
 	for (i = 0; i < 10; i++) *(ch + i) = in[i];
 	return ch;
 }
+
 

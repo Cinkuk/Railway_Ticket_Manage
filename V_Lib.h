@@ -25,6 +25,7 @@
 
 // 长度常量
 #define STATIONNAME 20
+#define STRLENGTH 30
 
 //////////
 // 返回值类型
@@ -35,7 +36,7 @@ typedef int Bool;
 // 结构体
 // 存储途径站点名字的链式串
 typedef struct StopName {
-	char* name;
+	 char* name;
 
 	struct StopName* next; // 下一站点名字
 }StopName;

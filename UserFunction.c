@@ -60,8 +60,8 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 	int FindLeaveStop = 0; // 0：未找到出发站，1：已找到
 	int i = 0; // 循环变量
 
-	char* CurTrain; //当前车次编号
-	char* CurStop; // 当前遍历到的站点名
+	char* CurTrain = (char*)malloc(sizeof(char) * STRLENGTH); //当前车次编号
+	char* CurStop = (char*)malloc(sizeof(char) * STRLENGTH); // 当前遍历到的站点名
 
 	int Index_L = 0; // 出发站点在车次中的顺序序号
 	int Index_A =0; // 终点站在车次中的顺序序号
