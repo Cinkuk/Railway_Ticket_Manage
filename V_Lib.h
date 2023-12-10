@@ -29,7 +29,7 @@
 // 长度常量
 #define STATIONNAME 20
 #define STRLENGTH 30
-#define LINELENGTH 15
+#define LINELENGTH 150
 
 //////////
 // 返回值类型

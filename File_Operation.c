@@ -128,10 +128,15 @@ Status LoadFromHD()
 		if (BlockBegin == 0 && ReadBlock->NextLine->NextLine)
 		{
 			// 创建新车次需要的空间变量
-
-			
+			char* _TrainNum = (char*)malloc(sizeof(char) * STRLENGTH);
+			char* _Start = (char*)malloc(sizeof(char) * STRLENGTH);
+			char* _End = (char*)malloc(sizeof(char) * STRLENGTH);
+			int _Occupant;
+			int _SurplusTicket;
+			StopName* _StopList = (StopName*)malloc(sizeof(StopName));
+			LeaveTime* _LeaveTime = (LeaveTime*)malloc(sizeof(LeaveTime));
 			// 空间变量赋值
-
+			
 			
 			// 新增车次
 			

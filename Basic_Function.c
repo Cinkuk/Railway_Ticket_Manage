@@ -180,3 +180,16 @@ void BF_QuickSort(SearchResult* A, int p, int r, int KeyKind)
 		BF_QuickSort(A, q + 1, r, KeyKind);
 	}
 }
+
+// 传入字符串格式的数字，转换为数字
+int BF_StrToInt(char* inp)
+{
+	int i = 0;
+	int sum = 0; // 结果
+	// 字符串未遍历完
+	while (*(inp + i) != '\0')
+	{
+		sum = sum * 10 + (int)*(inp + i++) - 48;
+	}
+	return sum;
+}
