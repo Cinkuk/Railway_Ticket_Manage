@@ -38,7 +38,13 @@ void main()
 	printf("%d\n", BF_StrToInt(d));
 #endif
 
-
-
+	char* a = "00:00";
+	char* b = "15:47"; // 947
+	char* c = "09:52"; // 592
+	char* d = "22.16"; // 1336
+	printf("%d\n", BF_StrToMin(a));
+	printf("%d\n", BF_StrToMin(b));
+	printf("%d\n", BF_StrToMin(c));
+	printf("%d\n", BF_StrToMin(d));
 
 }

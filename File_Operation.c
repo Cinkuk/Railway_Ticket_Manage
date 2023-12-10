@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// 从磁盘读取
-Status LoadFromHD()
+// 从磁盘读取车次
+Status LoadTrainFromHD()
 {
 	FILE* fp;
 	char* filename = "TrainIN.txt";
@@ -70,6 +70,7 @@ Status LoadFromHD()
 		ReadLine->c1 = l1;
 		ReadLine->c2 = l2;
 		ReadLine->c3 = l3;
+		ReadLine->NextLine = NULL;
 
 		// 获取逗号分隔的第一个字符串
 		token = strtok(line, ",");
@@ -123,7 +124,7 @@ Status LoadFromHD()
 			p = p->NextLine;
 		}
 
-		// 判断是否为一个车次信息读取完毕
+		// 判断是否为一个车次信息读取完毕，读取完毕则创建新车次
 		// 1. BlockBegin=0, 2.ReadBlock至少读取了两行的信息
 		if (BlockBegin == 0 && ReadBlock->NextLine->NextLine)
 		{
@@ -134,12 +135,70 @@ Status LoadFromHD()
 			int _Occupant;
 			int _SurplusTicket;
 			StopName* _StopList = (StopName*)malloc(sizeof(StopName));
+			StopName* NewS, *ps;
 			LeaveTime* _LeaveTime = (LeaveTime*)malloc(sizeof(LeaveTime));
+			LeaveTime* NewL, *pl;
+			int time = 0;
 			// 空间变量赋值
-			
-			
+			strcpy(_TrainNum, ReadBlock->NextLine->c1); // _TrainNum
+			_Occupant = BF_StrToInt(ReadBlock->NextLine->c2); // _Occupant
+			_SurplusTicket = BF_StrToInt(ReadBlock->NextLine->c3); // SurplusTicket
+			strcpy(_Start, ReadBlock->NextLine->NextLine->c1); // _Start
+
+			_StopList->next = NULL;
+			_LeaveTime->next = NULL;
+			// 遍历读取的数据存入对应结构中
+			p = ReadBlock->NextLine->NextLine;
+			while (p)
+			{
+				// 新结点
+				NewS = (StopName*)malloc(sizeof(StopName));
+				NewL = (LeaveTime*)malloc(sizeof(LeaveTime));
+				char* NewStopName = (char*)malloc(sizeof(char) * STRLENGTH);
+				strcpy(NewStopName, p->c1);
+				NewS->name = NewL->name = NewStopName; // BOTH.name
+				// 如果为最后一站
+				if (!(p->NextLine))
+				{
+					_End = p->c1;
+					NewL->hour = NewL->min = NewL->hour = -1;
+				}
+				else
+				{
+					NewL->ToNextMin = BF_StrToInt(p->c3); // LeaveTime.ToNextTime
+					time = BF_StrToMin(p->c2);
+					NewL->hour = time / 60;
+					NewL->min = time % 60;
+				}
+				NewL->next = NULL;
+				NewS->next = NULL;
+				
+				// NewS插入为尾结点
+				ps = _StopList;
+				while (ps)
+				{
+					if (!(ps->next))
+					{
+						ps->next = NewS;
+						break;
+					}
+					ps = ps->next;
+				}
+				// NewL插入为尾结点
+				pl = _LeaveTime;
+				while (pl)
+				{
+					if (!(pl->next))
+					{
+						pl->next = NewL;
+						break;
+					}
+					pl = pl->next;
+				}
+				p = p->NextLine;
+			} // while (p)
 			// 新增车次
-			
+			TM_NewTrain(_TrainNum, _Start, _StopList, _End, _LeaveTime, _Occupant, _SurplusTicket);
 
 			// 清空ReadBlock，重置ReadBlock的Next指针为NULL
 			p = ReadBlock->NextLine; // p指向首元结点
@@ -151,6 +210,11 @@ Status LoadFromHD()
 			} // while (p)
 			ReadBlock->NextLine = NULL;
 
+			// 释放其他可释放的内存
+			free(_TrainNum);
+			free(_Start);
+			free(_End);
+
 		} // if (BlockBegin == 0 && ReadBlock->NextLine->NextLine)
 
 	} // while (fgets(line, LINELENGTH, fp) != NULL)
@@ -159,10 +223,32 @@ Status LoadFromHD()
 	return OK;
 }
 
+// 从磁盘读取订单
+Status LoadOrderFromHD()
+{
 
+}
 
-// 存盘
-Status SaveToHD()
+// 从磁盘读取两个检索数据库
+Status LoadDBFromHD()
+{
+
+}
+
+// 车次信息存盘
+Status SaveTrainToHD()
+{
+
+}
+
+// 订单信息存盘
+Status SaveOrderToHD()
+{
+
+}
+
+// 检索数据库存盘
+Status SaveDBToHD()
 {
 
 }

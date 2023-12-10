@@ -194,3 +194,28 @@ int BF_StrToInt(char* inp)
 	}
 	return sum;
 }
+
+// 传入时间，返回分钟总数
+// freeze
+int BF_StrToMin(char* time)
+{
+	int i = 0;
+	int sum_h = 0;
+	int sum_m = 0;
+	int hour_flag = 0; // 0: hour, 1:min
+	while (*(time + i) != '\0')
+	{
+		if (48 <= *(time + i) && *(time + i) <= 57) // time为数字
+		{
+			if (hour_flag == 0) sum_h = sum_h * 10 + (int)*(time + i) - 48;
+			else if (hour_flag == 1) sum_m = sum_m * 10 + (int)*(time + i) - 48;
+			i++;
+		}
+		else // time为分隔符号
+		{
+			hour_flag = 1;
+			i++;
+		}
+	}
+	return sum_h * 60 + sum_m;
+}

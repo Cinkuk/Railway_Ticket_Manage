@@ -282,7 +282,8 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 	} // if (!(p = TM_GetHeadPointer(*_TrainNum)))
 
 	// 写入车次信息进NT
-	NT->NodeKind = "E";
+	NT->NodeKind = (char*)malloc(sizeof(char) * 3);
+	strcpy(NT->NodeKind, "E");
 	NT->TrainNum = (char*)malloc(sizeof(char) * STRLENGTH);
 	strcpy(NT->TrainNum, _TrainNum);
 	NT->Start = (char*)malloc(sizeof(char) * STRLENGTH);

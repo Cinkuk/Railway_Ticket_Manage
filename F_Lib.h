@@ -35,6 +35,7 @@ extern int BF_Get_Train_Number(char*);
 extern char* BF_Merge_Char(char[]);
 extern void BF_QuickSort(SearchResult*, int, int, int);
 extern int BF_StrToInt(char*);
+extern int BF_StrToMin(char*);
 
 
 // UserFunction.c
@@ -48,4 +49,10 @@ extern Status UF_LeaveTimeSort(SearchResult*);
 extern Status UF_RunTimeSort(SearchResult* );
 
 // File_Operation.c
-extern Status LoadFromHD();
+extern Status LoadTrainFromHD();
+extern Status LoadOrderFromHD();
+extern Status LoadDBFromHD();
+extern Status SaveTrainToHD();
+extern Status SaveOrderToHD();
+extern Status SaveDBToHD();
+
