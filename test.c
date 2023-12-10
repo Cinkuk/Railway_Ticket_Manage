@@ -3,8 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 
+static void TrainInfoTraverse();
+static void DisplayTrainInfoNode(SUB_TrainInfo*);
+
 void main()
 {	
+
 #if 0
 	// TEST BF_Merge_Char
 	char a[10] = { 'A','5','6','0','0','0','0','5','9'};
@@ -38,6 +42,8 @@ void main()
 	printf("%d\n", BF_StrToInt(d));
 #endif
 
+#if 0
+	// TEST BF_StrToMin
 	char* a = "00:00";
 	char* b = "15:47"; // 947
 	char* c = "09:52"; // 592
@@ -46,5 +52,78 @@ void main()
 	printf("%d\n", BF_StrToMin(b));
 	printf("%d\n", BF_StrToMin(c));
 	printf("%d\n", BF_StrToMin(d));
+#endif
+
+	TM_InitTicket();
+	OM_InitOrder();
+	S_InitSIDB();
+	S_InitTIDB();
+	LoadTrainFromHD();
+	TrainInfoTraverse();
+}
+
+void TrainInfoTraverse()
+{
+	TOP_TrainInfo* p;
+	p = VL_Ti_Lib;
+	int i = 0;
+	while (i < 11)
+	{
+		switch (i)
+		{
+		case 0: {printf("NO.G Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->G); break; }
+		case 1: {printf("NO.D Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->D); break; }
+		case 2: {printf("NO.C Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->C); break; }
+		case 3: {printf("NO.Z Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->Z); break; }
+		case 4: {printf("NO.T Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->T); break; }
+		case 5: {printf("NO.K Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->K); break; }
+		case 6: {printf("NO.Y Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->Y); break; }
+		case 7: {printf("NO.L Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->L); break; }
+		case 8: {printf("NO.S Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->S); break; }
+		case 9: {printf("NO.N Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->N); break; }
+		case 10: {printf("NO.P Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->P); break; }
+		}
+		i++;
+	}
+}
+
+static void DisplayTrainInfoNode(SUB_TrainInfo* TN)
+{
+	StopName* SN, *p;
+	LeaveTime* LT;
+	int i = 1;
+	p = TN;
+	
+	while (i<10)
+	{
+		TN = TN->FirstNum[i]->next; 
+		while (TN)
+		{
+			SN = TN->Stop->next;
+			LT = TN->StationLeaveTime->next;
+
+			printf("车次：%s\n", TN->TrainNum);
+			printf("始发站：%s\n", TN->Start);
+			printf("终到站：%s\n", TN->End);
+			printf("乘员定额：%d\n", TN->OccupantQuota);
+			printf("余票数量：%d\n\n", TN->SurplusTicket);
+
+			printf("途径站点如下：\n");
+			while (SN)
+			{
+				printf("%-10s\t", SN->name);
+				SN = SN->next;
+			}
+			printf("\n\n各站点发车时间和区间运行时长\n");
+			while (LT)
+			{
+				printf("%-10s\t%d:%d\t%d\n", LT->name, LT->hour, LT->min, LT->ToNextMin);
+				LT = LT->next;
+			}
+			TN = TN->next;
+		}
+		i++;
+		TN = p;
+	}
 
 }

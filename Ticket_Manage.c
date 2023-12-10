@@ -2,8 +2,8 @@
 // 所依赖的关键变量存放于Variables_Lib.c中
 // 本文件的函数名以'TM_'开头
 //
-// Test Status: Undo
-// Code Status: Working
+// Test Status: Freeze
+// Code Status: Finished
 //
 // 函数与功能对应：
 // 
@@ -42,7 +42,7 @@
 #include <string.h>
 
 // 车票操作数据库部分
-// 
+// Freeze
 // 申请SUB_TrainInfo类别的头结点，用于初始化FirstNum[]指针数组内的结点
 SUB_TrainInfo* TM_RequestSUBTrainHeadNode()
 {
@@ -69,6 +69,7 @@ SUB_TrainInfo* TM_RequestSUBTrainHeadNode()
 }
 
 // 申请SUB_TrainInfo类别的头结点，用于初始化TOP_TrainInfo下的结点
+// Freeze
 SUB_TrainInfo* TM_RequestNodeForTopNode()
 {
 		// 申请SUB_TrainInfo结点
@@ -116,6 +117,7 @@ SUB_TrainInfo* TM_RequestNodeForTopNode()
 }
 
 // 初始化VL_Ti_Lib
+// Freeze
 Status TM_InitTicket()
 {
 	int index; // 循环变量
@@ -158,6 +160,7 @@ Status TM_InitTicket()
 } // Status InitTicket()
 
 // 返回VL_Ti_Lib中对应车次开头的头指针
+// Freeze
 SUB_TrainInfo* TM_Get_TiLib_HeadPointer(char* FirstC)
 {
 	switch (*FirstC)
@@ -178,6 +181,7 @@ SUB_TrainInfo* TM_Get_TiLib_HeadPointer(char* FirstC)
 }
 
 // 将车次信息结点依照升序插入到对应位置
+// Freeze
 Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 {
 	int NewNum = BF_Get_Train_Number(NT->TrainNum); //  NT车次数值
@@ -188,7 +192,7 @@ Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 
 	if (!p) return ERROR; // 目标结点不存在
 
-	HNum = (int)*(NT->TrainNum + 1);
+	HNum = (int)*(NT->TrainNum + 1)-48;
 	p = p->FirstNum[HNum]; // 指向对应数字最高位的头结点
 
 	// 目标结点不存在，新增头结点后，将NT链接在头结点之后
@@ -204,7 +208,6 @@ Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 	}
 	
 	// 目标结点存在，进行比较
-	NewNum = BF_Get_Train_Number(NT->TrainNum);
 	while (p)
 	{
 		// 头结点后无结点
@@ -217,7 +220,7 @@ Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 		// 头结点后有结点
 		else
 		{
-			while (p)
+			while (p->next)
 			{
 				PNum = BF_Get_Train_Number(p->TrainNum); // 计算当前结点的车次数字
 				NextNum=PNum = BF_Get_Train_Number(p->next->TrainNum); // 计算p->next结点的车次数字
@@ -244,6 +247,7 @@ Status TM_InsertTrainNode(SUB_TrainInfo* NT)
 }
 
 // 新增车次结点进车次信息系统中（用于修改的数据库）
+// Freeze
 // input：车次编号、始发站、途经站、终到站、_LeaveTime(各站点发车时间、各站点运行到下一站点时间)、乘员定额、余票数量
 // output：NOSPACE：无可用空间，ERROR：对应车次头结点不存在，OK：正常
 Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,

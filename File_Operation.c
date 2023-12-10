@@ -1,26 +1,35 @@
 // 本文件用于对文件进行读写操作
 // 本文件的函数名以'FO_'开头
 //
-// Test Status: Undo
-// Code Status: Undo
+// Test Status: Working
+// Code Status: Working
 //
 // 函数与功能对应：
+//
+// 从磁盘读取车次
+// Status FO_LoadTrainFromHD() 
+// return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
 // 
-// // 存盘
-// Status SaveToHD()
-// input: None
-// return: OK, NOSPACE, ERROR（文件无法打开、被占用）
+// 从磁盘读取订单
+// Status FO_LoadOrderFromHD()
+// return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
 // 
-// // 从磁盘读取
-// Status LoadFromHD()
-// input: None
-// return: OK, ERROR(无此文件),EMPTY(磁盘空间不足) 
+// 从磁盘读取两个检索数据库
+// Status FO_LoadDBFromHD()
+// return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
+//
+// 车次信息存盘
+// Status FO_SaveTrainToHD()
+// return: ERROR（文件写入失败）, NOSPACE（没有内存存储中间变量）, OK
 // 
-// 
-// 
-// 
-// 
-//  
+// 订单信息存盘
+// Status FO_SaveOrderToHD()
+// return: ERROR（文件写入失败）, NOSPACE（没有内存存储中间变量）, OK
+//
+// 检索数据库存盘
+// Status FO_SaveDBToHD()
+// return: ERROR（文件写入失败）, NOSPACE（没有内存存储中间变量）, OK
+//
 
 #include "F_Lib.h"
 #include "V_Lib.h"
@@ -29,7 +38,8 @@
 #include <string.h>
 
 // 从磁盘读取车次
-Status LoadTrainFromHD()
+// freeze
+Status FO_LoadTrainFromHD()
 {
 	FILE* fp;
 	char* filename = "TrainIN.txt";
@@ -52,7 +62,7 @@ Status LoadTrainFromHD()
 	// 创建变量存储每读取一个车次信息所需要的存储空间
 	ReadTrain* ReadBlock, *p, *q;
 	ReadBlock = (ReadTrain*)malloc(sizeof(ReadTrain));
-	if (!ReadBlock) return ERROR; // 无可用空间
+	if (!ReadBlock) return NOSPACE; // 无可用空间
 	ReadBlock->NextLine = NULL;
 
 	// 逐行获取内容
@@ -62,7 +72,7 @@ Status LoadTrainFromHD()
 		// 结构体
 		ReadTrain* ReadLine;
 		ReadLine = (ReadTrain*)malloc(sizeof(ReadTrain));
-		if (!ReadLine) return ERROR; // 无可用空间
+		if (!ReadLine) return NOSPACE; // 无可用空间
 		// 字符串
 		char* l1 = (char*)malloc(sizeof(char) * STRLENGTH);
 		char* l2 = (char*)malloc(sizeof(char) * STRLENGTH);
@@ -74,8 +84,6 @@ Status LoadTrainFromHD()
 
 		// 获取逗号分隔的第一个字符串
 		token = strtok(line, ",");
-		// 判断是否需要自增行号
-		if (BlockBegin == 1) row_index++;
 
 		// 若该行非空
 		while (token != NULL)
@@ -107,22 +115,26 @@ Status LoadTrainFromHD()
 		} // while (token != NULL)
 
 		// 本行内容分隔获取完，重置列号
-		row_index = 0;
+		coloum_index = 0;
 
 		// 获取完本行信息，写入结构体，准备开始获取下一行
 		p = ReadBlock;
 		// p指向ReadBlock尾结点
-		while (p)
+		// 若本行为车次内容，存储
+		if (!(strcmp(ReadLine->c1, "BOT") == 0) && !(strcmp(ReadLine->c1, "EOT") == 0))
 		{
-			// ReadLine插入到尾结点之后
-			if (!(p->NextLine))
+			while (p)
 			{
-				ReadLine->NextLine = NULL;
-				p->NextLine = ReadLine;
-				break;
-			}
-			p = p->NextLine;
-		}
+				// ReadLine插入到尾结点之后
+				if (!(p->NextLine))
+				{
+					ReadLine->NextLine = NULL;
+					p->NextLine = ReadLine;
+					break;
+				}
+				p = p->NextLine;
+			} // while (p)
+		} // if (!(strcmp(ReadLine->c1, "BOT") == 0) && !(strcmp(ReadLine->c1, "EOT")))
 
 		// 判断是否为一个车次信息读取完毕，读取完毕则创建新车次
 		// 1. BlockBegin=0, 2.ReadBlock至少读取了两行的信息
@@ -224,31 +236,31 @@ Status LoadTrainFromHD()
 }
 
 // 从磁盘读取订单
-Status LoadOrderFromHD()
+Status FO_LoadOrderFromHD()
 {
 
 }
 
 // 从磁盘读取两个检索数据库
-Status LoadDBFromHD()
+Status FO_LoadDBFromHD()
 {
 
 }
 
 // 车次信息存盘
-Status SaveTrainToHD()
+Status FO_SaveTrainToHD()
 {
 
 }
 
 // 订单信息存盘
-Status SaveOrderToHD()
+Status FO_SaveOrderToHD()
 {
 
 }
 
 // 检索数据库存盘
-Status SaveDBToHD()
+Status FO_SaveDBToHD()
 {
 
 }

@@ -3,9 +3,10 @@
 // 含有：
 // 以上变量以'VL_'开头
 //
-// Code Status: Working
+// Code Status: Freeze
 
 #include "V_Lib.h"
+
 
 // 车票车次信息总入口
 TOP_TrainInfo* VL_Ti_Lib;

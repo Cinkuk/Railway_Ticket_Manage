@@ -49,10 +49,10 @@ extern Status UF_LeaveTimeSort(SearchResult*);
 extern Status UF_RunTimeSort(SearchResult* );
 
 // File_Operation.c
-extern Status LoadTrainFromHD();
-extern Status LoadOrderFromHD();
-extern Status LoadDBFromHD();
-extern Status SaveTrainToHD();
-extern Status SaveOrderToHD();
-extern Status SaveDBToHD();
+extern Status FO_LoadTrainFromHD();
+extern Status FO_LoadOrderFromHD();
+extern Status FO_LoadDBFromHD();
+extern Status FO_SaveTrainToHD();
+extern Status FO_SaveOrderToHD();
+extern Status FO_SaveDBToHD();
 

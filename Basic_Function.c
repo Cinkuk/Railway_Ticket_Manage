@@ -1,7 +1,7 @@
 // 本文件用于比较、提取字符等基础函数
 // 本文件的函数名以'BF_'开头
 //
-// Test Status: Undo
+// Test Status: Working
 // Code Status: Working
 //
 // 函数与功能对应：
