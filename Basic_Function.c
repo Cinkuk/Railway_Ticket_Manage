@@ -182,6 +182,7 @@ void BF_QuickSort(SearchResult* A, int p, int r, int KeyKind)
 }
 
 // 传入字符串格式的数字，转换为数字
+// freeze
 int BF_StrToInt(char* inp)
 {
 	int i = 0;
