@@ -9,19 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void main()
+void WAIT_main()
 {
-	//char a = 48;
-	//int i = 48;
-	//while (i < 127) printf("%d: %c\n", i++, a++);
-	
-	//char* a = "A1234";
-	//char b;
-	//int i = 0;
-	//while (i < 6)
-	//{
-	//	b = *(a + i);
-	//	printf("%c", b);
-	//	i++;
-	//}
-	}
+
+}

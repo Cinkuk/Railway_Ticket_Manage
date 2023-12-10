@@ -45,3 +45,6 @@ extern Status UF_New_W_Order(char*, char*, char*, int, char*);
 extern Status UF_Delete_Order(char*);
 extern Status UF_LeaveTimeSort(SearchResult*);
 extern Status UF_RunTimeSort(SearchResult* );
+
+// File_Operation.c
+extern Status LoadFromHD();

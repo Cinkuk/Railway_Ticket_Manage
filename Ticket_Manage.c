@@ -283,9 +283,12 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 
 	// 写入车次信息进NT
 	NT->NodeKind = "E";
+	NT->TrainNum = (char*)malloc(sizeof(char) * STRLENGTH);
 	strcpy(NT->TrainNum, _TrainNum);
+	NT->Start = (char*)malloc(sizeof(char) * STRLENGTH);
 	strcpy(NT->Start, _Start);
 	NT->Stop = _Stop;
+	NT->End = (char*)malloc(sizeof(char) * STRLENGTH);
 	strcpy(NT->End, _End);
 	NT->StationLeaveTime = _LeaveTime;
 	NT->OccupantQuota = _OccuQuota;
@@ -295,7 +298,13 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 	// 初始化正式订单头结点
 	OrNode = (Order*)malloc(sizeof(Order));
 	if (!OrNode) return NOSPACE; //无可用空间
-	
+	OrNode->NodeKind = (char*)malloc(sizeof(char) * 2);
+	OrNode->OrderNum = (char*)malloc(sizeof(char) * STRLENGTH);
+	OrNode->TrainNum = (char*)malloc(sizeof(char) * STRLENGTH);
+	OrNode->phone = (char*)malloc(sizeof(char) * STRLENGTH);
+	OrNode->Start = (char*)malloc(sizeof(char) * STRLENGTH);
+	OrNode->End = (char*)malloc(sizeof(char) * STRLENGTH);
+
 	// 赋值
 	OrNode->NodeKind = "H";
 	// 所有字符串赋值为空
@@ -306,7 +315,13 @@ Status TM_NewTrain(char* _TrainNum, char* _Start, StopName* _Stop, char* _End,
 	// 候补订单头结点
 	// 初始化候补订单头结点
 	WaOrNode = (WaitOrder*)malloc(sizeof(WaitOrder));
-	if (!OrNode) return NOSPACE; //无可用空间
+	if (!WaOrNode) return NOSPACE; //无可用空间
+	WaOrNode->NodeKind = (char*)malloc(sizeof(char) * 2);
+	WaOrNode->OrderNum = (char*)malloc(sizeof(char) * STRLENGTH);
+	WaOrNode->TrainNum = (char*)malloc(sizeof(char) * STRLENGTH);
+	WaOrNode->phone = (char*)malloc(sizeof(char) * STRLENGTH);
+	WaOrNode->Start = (char*)malloc(sizeof(char) * STRLENGTH);
+	WaOrNode->End = (char*)malloc(sizeof(char) * STRLENGTH);
 
 	// 赋值
 	WaOrNode->NodeKind = "H";

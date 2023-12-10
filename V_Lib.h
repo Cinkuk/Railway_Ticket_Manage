@@ -29,6 +29,7 @@
 // 长度常量
 #define STATIONNAME 20
 #define STRLENGTH 30
+#define LINELENGTH 15
 
 //////////
 // 返回值类型
@@ -231,6 +232,16 @@ typedef struct SearchWaitResult
 	Order* TransOrder; // 转为正式订单的订单结点
 	struct SearchWaitResult* next;
 }SearchWaitResult;
+
+// 车次文件读取结果
+typedef struct ReadTrain
+{
+	char* c1;
+	char* c2;
+	char* c3;
+
+	struct ReadTrain* NextLine;
+}ReadTrain;
 
 //////////
 // 变量

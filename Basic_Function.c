@@ -16,6 +16,7 @@
 #include <stdlib.h>
 
 // 提取车次中的数字
+// freeze
 int BF_Get_Train_Number(char* TrainNum)
 {
 	int i = 0; // 循环变量
@@ -29,9 +30,9 @@ int BF_Get_Train_Number(char* TrainNum)
 		i++;
 	} // while (*(TrainNum + i) != '\0')
 
-	while (j <= i) // 将编号中的的数字转换为整数
+	while (j < i) // 将编号中的的数字转换为整数
 	{
-		sum = sum * 10 + *(TrainNum + j);
+		sum = sum * 10 + (int)*(TrainNum + j) - 48;
 		j++;
 	} // while (j <= i)
 
@@ -39,10 +40,11 @@ int BF_Get_Train_Number(char* TrainNum)
 }
 
 // 传入10位字符数组，输出字符串
+// freeze
 char* BF_Merge_Char(char in[])
 {
 	char* ch;
-	ch = (char*)malloc(sizeof(char) * STRLENGTH);
+	ch = (char*)malloc(sizeof(char) * 10);
 	if (!ch) return NULL;
 	int i;
 	for (i = 0; i < 10; i++) *(ch + i) = in[i];
