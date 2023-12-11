@@ -3,9 +3,13 @@
 
 static void TrainInfoTraverse();
 static void DisplayTrainInfoNode(SUB_TrainInfo*);
-
+static void DisplaySearchResult(SearchResult*);
 void main()
 {	
+
+	TM_InitTicket();
+	OM_InitOrder();
+	OM_InitOrderID();
 
 #if 0
 	// TEST BF_Merge_Char
@@ -52,13 +56,68 @@ void main()
 	printf("%d\n", BF_StrToMin(d));
 #endif
 
-	TM_InitTicket();
-	OM_InitOrder();
+
 	S_InitSIDB();
 	S_InitTIDB();
 	FO_LoadTrainFromHD();
+
+#if 0
 	TrainInfoTraverse();
-	return;
+#endif
+
+
+	SearchResult* SR;
+	SR=UF_SearchStop("广州南", "上海虹桥");
+	DisplaySearchResult(SR);
+
+
+#if 0
+	OM_New_F_Order("13712345678", "D3802", "云浮东", "普者黑", 8);
+	OM_New_F_Order("13712345678", "D3802", "广州南", "大理", 500);
+	printf("%d", OM_New_F_Order("13712345649", "D3802", "广州南", "大理", 500));
+	OM_New_W_Order("13712345680", "D3802", "广州南", "昆明", 1);
+	OM_New_W_Order("13712345681", "D3802", "佛山西", "昆明南", 1);
+#endif
+
+#if 0
+	OM_InitOrderID();
+	printf("NO.1: %s\n", OM_CreateOrderNum());
+	printf("NO.2: %s\n", OM_CreateOrderNum());
+	printf("NO.3: %s\n", OM_CreateOrderNum());
+	printf("NO.4: %s\n", OM_CreateOrderNum());
+	printf("NO.5: %s\n", OM_CreateOrderNum());
+	printf("NO.6: %s\n", OM_CreateOrderNum());
+	printf("NO.7: %s\n", OM_CreateOrderNum());
+	printf("NO.8: %s\n", OM_CreateOrderNum());
+	printf("NO.9: %s\n", OM_CreateOrderNum());
+	printf("NO.10: %s\n", OM_CreateOrderNum());
+	printf("NO.11: %s\n", OM_CreateOrderNum());
+	printf("\n");
+#endif
+	
+#if 0
+	OM_InitOrderID();
+	int i = 1;
+	int j = 0;
+	char* s = (char*)malloc(sizeof(char) * 15);
+	while (True)
+	{
+		s = OM_CreateOrderNum();
+		printf("NO.%015d:\t%s\n", i++, s);
+		if (strcmp(s, "Z999999999")==0)
+		{
+			s = OM_CreateOrderNum();
+			printf("NO.%035d:\t%s\n", i++, s);
+			s = OM_CreateOrderNum();
+			printf("NO.%015d:\t%s\n", i++, s);
+			s = OM_CreateOrderNum();
+			printf("NO.%015d:\t%s\n", i++, s);
+			s = OM_CreateOrderNum();
+			printf("NO.%015d:\t%s\n", i++, s);
+			return;
+		}
+	}
+#endif	
 }
 
 void TrainInfoTraverse()
@@ -126,4 +185,16 @@ static void DisplayTrainInfoNode(SUB_TrainInfo* TN)
 		TN = p;
 	}
 
+}
+
+void DisplaySearchResult(SearchResult* SR)
+{
+	SearchResult* p = SR->NextResult;
+	printf("查询到从%s到%s的班次如下：\n\n", p->Leave, p->Arrive);
+	printf("\t%-10s\t|\t%-15s\t|\t%-15s\t|\t%s\n", "班次", "出发时间", "到达时间", "余票");
+	while (p)
+	{
+		printf("\t%-10s\t|\t%02d:%02d\t|\t%02d:%02d\t|\t%d\n", p->TrainNum, p->LeaveTime[0], p->LeaveTime[1], (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) / 60, (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) % 60, p->TrainNode->SurplusTicket);
+		p = p->NextResult;
+	}
 }

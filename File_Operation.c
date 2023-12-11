@@ -14,21 +14,10 @@
 // Status FO_LoadOrderFromHD()
 // return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
 // 
-// 从磁盘读取两个检索数据库
-// Status FO_LoadDBFromHD()
-// return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
-//
-// 车次信息存盘
-// Status FO_SaveTrainToHD()
-// return: ERROR（文件写入失败）, NOSPACE（没有内存存储中间变量）, OK
-// 
 // 订单信息存盘
 // Status FO_SaveOrderToHD()
 // return: ERROR（文件写入失败）, NOSPACE（没有内存存储中间变量）, OK
 //
-// 检索数据库存盘
-// Status FO_SaveDBToHD()
-// return: ERROR（文件写入失败）, NOSPACE（没有内存存储中间变量）, OK
 //
 
 #include "F_Lib.h"
@@ -39,7 +28,7 @@
 Status FO_LoadTrainFromHD()
 {
 	FILE* fp;
-	char* filename = "TrainIN.txt";
+	char* filename = "TrainDB.csv";
 	fp = fopen(filename, "r");
 
 	int BlockBegin = 0; // 0：忽略之后的内容，1：记录之后的内容
@@ -239,26 +228,8 @@ Status FO_LoadOrderFromHD()
 
 }
 
-// 从磁盘读取两个检索数据库
-Status FO_LoadDBFromHD()
-{
-
-}
-
-// 车次信息存盘
-Status FO_SaveTrainToHD()
-{
-
-}
-
 // 订单信息存盘
 Status FO_SaveOrderToHD()
-{
-
-}
-
-// 检索数据库存盘
-Status FO_SaveDBToHD()
 {
 
 }

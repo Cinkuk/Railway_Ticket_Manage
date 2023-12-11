@@ -45,6 +45,7 @@
 // 初始化部分
 
 // 初始化一个车次链表头链表
+// Freeze
 TrainIndexNode* S_RequestTINode()
 {
 	int i; // 索引变量
@@ -181,38 +182,23 @@ SUB_TrainInfo* S_GetTrainNode(char* _TrainNum)
 {
 	char First = *_TrainNum; // 车次编号首字母
 	SUB_TrainInfo* p, *q; // 工作指针
-	int i = 0; // 循环变量
 	
 	q = NULL; // q为返回值
 
-	if (!(p = TM_Get_TiLib_HeadPointer(_TrainNum))); // p指向对应车次类别头结点
-	return NULL; // 对应类别头结点不存在
+	p = TM_Get_TiLib_HeadPointer(_TrainNum); // p指向对应车次类别头结点
+	
+	int Firnum = (int)*(_TrainNum + 1) - 48;
+	p = p->FirstNum[Firnum]->next;
 
-	p = p->next;
 	while (p) // 遍历车次信息链表
 	{
-		// 车次编号格式为一位字母+4位数字
-		// 逐位比较车次数字
-		for (i = 0; i <= 5; i++) 
+		if (strcmp(p->TrainNum, _TrainNum) == 0)
 		{
-			// 车次逐位比较均相同
-			// 退出while循环并返回地址
-			if (*(p->TrainNum + i) == '\0' && *(_TrainNum + i) == '\0')
-			{
-				q = p;
-				goto RETURN;
-			}
-			else if (*(p->TrainNum + i) == *(_TrainNum + i)); // 当前位相同，比较下一位
-			else // 当前位不同，p指向下一位，本轮比较终止
-			{
-				p = p->next;
-				break;
-			}
-		} // for (i = 1; i <= 4; i++) 
+			q = p;
+			break;
+		}
+		p = p->next;
 	} // while (p)
-
-	// 只有找到匹配项才会返回对应指针，否则均返回空指针
-RETURN: return q;
 
 	// 此时q为空指针，由于不符合进入RETURN的条件，且函数需要返回值，下面的语句用于q=NULL时的返回
 	return q;
@@ -254,7 +240,8 @@ PhoneOrder* S_GetPhoneOrderNode(char* _phone)
 
 		PONode = (PhoneOrder*)malloc(sizeof(struct PhoneOrder));
 		if (!PONode) { goto RETURN; } // 无可用空间，返回空指针
-		
+		PONode->NodeKind = (char*)malloc(sizeof(char) * 3);
+		PONode->phone = (char*)malloc(sizeof(char) * STRLENGTH);
 		// 赋值头结点
 		S_Fill_OrLib_HeadNode(q);
 		PONode->NodeKind = "H";
@@ -448,5 +435,6 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 	
 	return OK;
 }
+
 
 

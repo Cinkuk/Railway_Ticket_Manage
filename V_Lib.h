@@ -185,7 +185,7 @@ typedef struct TrainIndexDB
 typedef struct OrderSet
 {
 	// 订单编号格式为一位字母+9位数字
-	char ID[10];
+	char ID[11];
 	char OrderKind; // 订单类别，F:正式订单，W：候补订单
 	Order* OrderNode;
 	WaitOrder* WaitOrderNode;

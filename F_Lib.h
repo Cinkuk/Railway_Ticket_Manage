@@ -19,6 +19,7 @@ extern Status TM_NewTrain(char* , char* , StopName* , char* ,
 
 // Order_Manage.c
 extern Status OM_InitOrder();
+extern Status OM_InitOrderID();
 extern char* OM_CreateOrderNum();
 extern Status OM_New_F_Order(char*, char*,char*, char*, int);
 extern Status OM_New_W_Order(char*, char*, char*, char*, int);
@@ -43,7 +44,7 @@ extern int BF_StrToMin(char*);
 
 
 // UserFunction.c
-extern Status UF_SearchStop(char*, char*, SearchResult*);
+extern SearchResult* UF_SearchStop(char*, char*);
 extern int UF_GetOrderInfo(char*, void*);
 extern PhoneOrderList* UF_GetPhoneOrder(char* );
 extern Status UF_New_F_Order(char*, char*, char*, int, char*);

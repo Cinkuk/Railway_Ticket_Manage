@@ -49,8 +49,9 @@
 
 
 // 查询，输入出发地、目的地
-// return：OK, ERROR（出发站不存在）, NOSPACE, EMPTY（无可用班次）
-Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
+// Freeze
+// return：返回结果指针, NULL
+SearchResult* UF_SearchStop(char* _Leave, char* _Arrive)
 {
 	StopIndexDB* LeaveStop; // 工作指针
 
@@ -75,7 +76,8 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 
 	// 返回结果指针
 	// 为SR分配空间，无可用空间则返回空指针
-	if (!(SR = (SearchResult*)malloc(sizeof(SearchResult)))) return NOSPACE;
+	SearchResult* SR = (SearchResult*)malloc(sizeof(SearchResult));
+	if (!SR) return NULL;
 	// 填充头结点信息
 	SR->TrainNum = SR->Leave = SR->Arrive = "HeadNode";
 	SR->TrainNode = NULL;
@@ -88,14 +90,7 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 	// 遍历站点检索车次的数据库寻找出发站
 	while (LeaveStop && FindLeaveStop == 0) // 站点检索车次的数据库未遍历完，未找到出发站
 	{
-		while (*(LeaveStop->StationName + i) == *(_Leave + i) &&
-			i != 0) // 需要匹配的字符串非空，逐位匹配相等
-		{
-			i++;
-		} // while
-		// 需要匹配的字符串完全相同且非空，找到出发站
-		if (*(LeaveStop->StationName + i) == '\0' &&
-			*(_Leave + i) == '\0' && i != 0)
+		if(strcmp(LeaveStop->StationName, _Leave)==0)
 		{
 			// 找到出发站
 			FindLeaveStop = 1;
@@ -107,24 +102,23 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 	} // 	while (LeaveStop && FindLeaveStop == 0)
 
 	// 出发站不存在
-	if (FindLeaveStop == 0) return ERROR; 
+	if (FindLeaveStop == 0) return NULL; 
 
 	// 出发站存在，遍历经过出发站的全部车次
 	TrainNumList* _TrainList = LeaveStop->TrainList;
 	FindLeaveStop = 0;
 	while (_TrainList) // 车次未遍历完
 	{
+		_ToNextTime = 0;
 		CurTrain = _TrainList->CurNum; // 暂存当前车次编号
 		CurTrainNode = S_GetTrainNode(CurTrain);
-		CurStopList = CurTrainNode->StationLeaveTime;
+		CurStopList = CurTrainNode->StationLeaveTime->next;
 		
-		CurStop = CurStopList->name;
 		// 遍历途径站点
 		while (CurStopList)
 		{
-			// 记录出发站到当前车站所经过的总时间
-			if (FindLeaveStop == 1) _ToNextTime += 60 * CurStopList->hour + CurStopList->min;
-
+			CurStop = CurStopList->name;
+			
 			// 站点与出发站相同
 			if (strcmp(CurStop, _Leave) == 0)
 			{
@@ -134,19 +128,24 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 
 				FindLeaveStop = 1;
 			}
+
+			
 			
 			// 站点与终点站相同
-			else if (strcmp(CurStop, _Arrive) == 0)
+			if (strcmp(CurStop, _Arrive) == 0)
 			{
 				Index_A = Index;
 				_ArriveTime[0] = CurStopList->hour;
 				_ArriveTime[1] = CurStopList->min;
+				break;
 
 			}
 
-			// 均不相同，比较下一个站点
+			// 记录出发站到当前车站所经过的总时间
+			if (FindLeaveStop == 1) _ToNextTime += CurStopList->ToNextMin;
+
+			// 比较下一个站点
 			CurStopList = CurStopList->next; // 指向下一站点
-			CurStop = CurStopList->name; // 记录当前站点名字
 
 			// 遍历序号自增
 			Index++;
@@ -159,7 +158,8 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 			Index_L < Index_A)
 		{
 			// 为SR分配空间，无可用空间则返回空指针
-			if (!(NEW_SR = (SearchResult*)malloc(sizeof(SearchResult)))) return NOSPACE;
+			NEW_SR = (SearchResult*)malloc(sizeof(SearchResult));
+			if (!NEW_SR) return NOSPACE;
 			NEW_SR->TrainNum = CurTrain; // 车次编号
 			NEW_SR->Leave = _Leave; // 出发地
 			NEW_SR->Arrive = _Arrive; // 到达地
@@ -176,25 +176,27 @@ Status UF_SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 			SR->NextResult = NEW_SR;
 		}
 
-		else
-		{
-			// 重置搜索记录变量
-			FindLeaveStop = 0;
-			Index_L = Index_A = Index = 0;
-			_LeaveTime[0] = _LeaveTime[1] = 0;
-			_ArriveTime[0] = _ArriveTime[1] = 0;
-			_ToNextTime = 0;
+		
+		
+		// 重置搜索记录变量
+		FindLeaveStop = 0;
+		Index_L = 0;
+		Index_A = 0;
+		Index = 1;
+		_LeaveTime[0] = _LeaveTime[1] = 0;
+		_ArriveTime[0] = _ArriveTime[1] = 0;
+		_ToNextTime = 0;
 			
-			// 查找该站点的下一班车次
-			_TrainList = _TrainList->next;
-		}
+		
+		// 查找该站点的下一班车次
+		_TrainList = _TrainList->next;
 	} // while (_TrainList)
 
 	// 无可用车次
-	if (!SR->NextResult) return EMPTY;
+	if (!SR->NextResult) return NULL;
 	
 	// 查找成功
-	else return OK;
+	else return SR;
 } // Status SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 
 // 查询订单
