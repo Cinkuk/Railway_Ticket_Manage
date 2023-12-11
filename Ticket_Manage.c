@@ -37,9 +37,6 @@
 
 #include "V_Lib.h"
 #include "F_Lib.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 // 车票操作数据库部分
 // Freeze

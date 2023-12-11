@@ -46,9 +46,6 @@
 
 #include "F_Lib.h"
 #include "V_Lib.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 // 查询，输入出发地、目的地

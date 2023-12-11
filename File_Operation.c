@@ -33,9 +33,6 @@
 
 #include "F_Lib.h"
 #include "V_Lib.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 // 从磁盘读取车次
 // freeze

@@ -6,8 +6,6 @@
 
 #include "V_Lib.h"
 #include "F_Lib.h"
-#include <stdio.h>
-#include <string.h>
 
 void WAIT_main()
 {

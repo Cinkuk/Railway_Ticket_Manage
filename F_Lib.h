@@ -3,6 +3,10 @@
 // Code Status: Undo
 
 #include "V_Lib.h"
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <memory.h>
 
 // Ticket_Manage.c
 extern SUB_TrainInfo* TM_RequestSUBTrainHeadNode();

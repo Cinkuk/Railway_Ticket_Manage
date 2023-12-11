@@ -41,8 +41,6 @@
 
 #include "F_Lib.h"
 #include "V_Lib.h"
-#include <stdlib.h>
-#include <string.h>
 
 // 初始化部分
 
@@ -282,48 +280,162 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 	// 工作指针
 	TrainIndexNode* _TIN;
 	StopIndexDB* _SID;
+	StopName* psn = _StopName->next;
 	_TIN = S_Get_TIDB_HeadPointer(_TrainNum);
-	_SID=VL_SI_DB;
-	
+
 	////
 	// 分配内存空间
-	// StationList
-	StationList* SL = (StationList*)malloc(sizeof(StationList)); 
 	
+	// StationList
+	StationList* SL = (StationList*)malloc(sizeof(StationList));
+	StationList* psl;
+
 	if (!SL) return NOSPACE; // 无可用空间
+	SL->next = NULL;
 
 	// TrainIndexNode
 	TrainIndexNode* TIN = (TrainIndexNode*)malloc(sizeof(TrainIndexNode));
-	char* TIN_NK = (char*)malloc(sizeof(char)*3);
-	char* TIN_TrainNum = (char*)malloc(sizeof(char)*STRLENGTH);
+	char* TIN_NK = (char*)malloc(sizeof(char) * 3);
+	char* TIN_TrainNum = (char*)malloc(sizeof(char) * STRLENGTH);
 
-	if (!TIN|| !TIN_NK ||!TIN_TrainNum) return NOSPACE;
+	if (!TIN || !TIN_NK || !TIN_TrainNum) return NOSPACE;
+	TIN->NextTrain = NULL;
+	TIN->NodeKind = TIN_NK;
+	TIN->TrainNum = TIN_TrainNum;
 
 	// TrainNumList
-	TrainNumList* TNL=(TrainNumList*)malloc(sizeof(TrainNumList)); 
-	char* CurNum = (char*)malloc(sizeof(char)*STRLENGTH);
+	TrainNumList* TNL = (TrainNumList*)malloc(sizeof(TrainNumList));
+	char* CurNum = (char*)malloc(sizeof(char) * STRLENGTH);
 
 	if (!TNL || !CurNum) return NOSPACE;
+	TNL->next = NULL;
 
 	// StopIndexDB
 	StopIndexDB* SID = (StopIndexDB*)malloc(sizeof(StopIndexDB));
-	char* SID_NK = (char*)malloc(sizeof(char)*3);
-	char* SID_SN = (char*)malloc(sizeof(char)*STRLENGTH);
+	char* SID_NK = (char*)malloc(sizeof(char) * 3);
+	char* SID_SN = (char*)malloc(sizeof(char) * STRLENGTH);
 
 	if (!SID || !SID_NK || !SID_SN) return NOSPACE;
-
+	SID->next = NULL;
+	
 	////
 	// Process 
 	// 将_StopName转换为StationList*
-	
+	psl = SL;
+	while (psn)
+	{
+		// 申请新站点空间
+		StationList* New_SL = (StationList*)malloc(sizeof(StationList));
+		New_SL->StationName = (char*)malloc(sizeof(char) * STRLENGTH);
+
+		if (!New_SL || !New_SL->StationName) return NOSPACE;
+		
+		// 记录站点名称
+		strcpy(New_SL->StationName, psn->name);
+
+		// 置空指针域
+		New_SL->next = NULL;
+
+		// New_SL 插入为SL尾结点
+		while (psl)
+		{
+			if (!psl->next)
+			{
+				psl->next = New_SL;
+				break;
+			}
+			psl = psl->next;
+		}
+
+		psn=psn->next; // psn后移
+
+	}
 	
 
 	// 将车次数据加入VL_TI_DB;
+	// 结点类型
+	strcpy(TIN_NK, "E");
+	// 用于加快检索的指针数组在此节点中无用，全部置空
+	for (int i = 0; i < 10; i++) TIN->NumIndex[i] = NULL;
+	// 车次编号
+	strcpy(TIN_TrainNum, _TrainNum);
+	// 本车次站点
+	TIN->StationNameList = SL;
 	
-
+	// 将TIN置于VL_TI_DB对应位置的头结点
+	// 获取车次首位数字
+	int Firnum = (int)*(_TrainNum + 1) - 48;
+	// _TIN已经指向首字母开头的头结点，下一步需要指向首位数字开头的头结点
+	_TIN = _TIN->NumIndex[Firnum];
+	// 插入为头结点
+	TIN->NextTrain = _TIN->NextTrain;
+	_TIN->NextTrain = TIN;
+	// 加入VL_TI_DB完成
 
 
 	// 遍历站点，将车次加入VL_SI_DB
+	psn = _StopName->next; // 指向途径站点首元结点
+	while (psn) // 站点列表未遍历完
+	{
+		_SID = VL_SI_DB->next ; // 指向首元结点
+		// 创建新车次结点
+		TrainNumList* NewTrainNum = (TrainNumList*)malloc(sizeof(TrainNumList));
+		if (!NewTrainNum) return NOSPACE;
+		memset(NewTrainNum, 0, sizeof(TrainNumList));
+		char* _CurNum = (char*)malloc(sizeof(char) * STRLENGTH);
+		if (!_CurNum) return NOSPACE;
+		strcpy(_CurNum, _TrainNum);
+		NewTrainNum->CurNum = _CurNum;
 
+		// 寻找VL_SI_DB中是否有本途径站点的结点
+		while (_SID) // 未遍历完
+		{
+			// 找到途径站点结点
+			if (strcmp(_SID->StationName, psn->name) == 0) 
+			{
+				// 插入为车次列表首元结点
+				NewTrainNum->next = _SID->TrainList->next;
+				_SID->TrainList->next = NewTrainNum;
+			} // if (strcmp(_SID->StationName, psn->name) == 0) 
+
+			// 遍历到最后结点，且途径站点不存在，创建为头结点
+			else if (!(_SID->next)) 
+			{
+				StopIndexDB* NewSID=(StopIndexDB*)malloc(sizeof(StopIndexDB));
+				if (!NewSID) return NOSPACE;
+				memset(NewSID, 0, sizeof(StopIndexDB));
+
+				char* NewNK = (char*)malloc(sizeof(char) * 3);
+				if (!NewNK) return NOSPACE;
+				memset(NewNK, 0, sizeof(char) * 3);
+
+				char* NewSN = (char*)malloc(sizeof(char) * STRLENGTH);
+				if (!NewSN) return NOSPACE;
+				memset(NewSN, 0, sizeof(char) * STRLENGTH);
+
+				NewSID->NodeKind = NewNK;
+				NewSID->StationName - NewSN;
+
+				// 赋值头结点
+				strcpy(NewSID->NodeKind, "E");
+				strcpy(NewSID->StationName, psn->name);
+				// 站点结点头节点加入车次
+				NewTrainNum->next = NewSID->TrainList->next;
+				NewSID->TrainList->next = NewTrainNum;
+
+				// 插入为数据库尾结点
+				NewSID->next = _SID->next;
+				_SID->next = NewSID;
+
+			} // else if (!(_SID->next)) 
+			
+			_SID = _SID->next; // 搜寻数据库下一个站点结点
+		} // while (_SID)
+		// 遍历下一个途径站点
+		psn = psn->next;
+	}
+	
+	return OK;
 }
+
 

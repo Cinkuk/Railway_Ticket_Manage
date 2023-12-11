@@ -37,8 +37,6 @@
 
 #include "V_Lib.h"
 #include "F_Lib.h"
-#include <stdlib.h>
-#include <string.h>
 
 
 // ≥ı ºªØVL_Or_Lib
