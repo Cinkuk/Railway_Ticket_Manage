@@ -66,9 +66,11 @@ void main()
 #endif
 
 
-	SearchResult* SR;
-	SR=UF_SearchStop("广州南", "上海虹桥");
-	DisplaySearchResult(SR);
+	SearchResult* SR, *p;
+	SR=UF_SearchStop("上海虹桥", "无锡东");
+	p = UF_RunTimeSort(SR);
+	//p = UF_LeaveTimeSort(SR);
+	DisplaySearchResult(p);
 
 
 #if 0
@@ -191,7 +193,7 @@ void DisplaySearchResult(SearchResult* SR)
 {
 	SearchResult* p = SR->NextResult;
 	printf("查询到从%s到%s的班次如下：\n\n", p->Leave, p->Arrive);
-	printf("\t%-10s\t|\t%-15s\t|\t%-15s\t|\t%s\n", "班次", "出发时间", "到达时间", "余票");
+	printf("\t%-10s\t|\t%-15s\t|\t%-15s\t|\t%s\n", "班次", "出发时间", "到达时间", "余票"); // 运行时间
 	while (p)
 	{
 		printf("\t%-10s\t|\t%02d:%02d\t|\t%02d:%02d\t|\t%d\n", p->TrainNum, p->LeaveTime[0], p->LeaveTime[1], (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) / 60, (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) % 60, p->TrainNode->SurplusTicket);

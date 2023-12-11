@@ -286,37 +286,39 @@ Status UF_Delete_Order(char* OrderNum)
 }
 
 // 按照出发时间递增排序
-Status UF_LeaveTimeSort(SearchResult* CurRes)
+SearchResult* UF_LeaveTimeSort(SearchResult* CurRes)
 {
-	if (!CurRes->NextResult) return ERROR; // 首元结点为空
+	if (!CurRes->NextResult) return NULL; // 首元结点为空
 	// 计算长度
 	int len = 0;
 	SearchResult* p = CurRes->NextResult; // 工作指针指向首元结点
+	SearchResult* q;
 	while (p)
 	{
 		len++;
 		p = p->NextResult;
 	}
-	BF_QuickSort(CurRes, 1, len, 0);
+	q = BF_QuickSort(CurRes, 1, len, 0);
 
-	return OK;
+	return q;
 }
 
 
 // 按照运行时间递增排序
-Status UF_RunTimeSort(SearchResult* CurRes)
+SearchResult* UF_RunTimeSort(SearchResult* CurRes)
 {
-	if (!CurRes->NextResult) return ERROR; // 首元结点为空
+	if (!CurRes) return ERROR; // 首元结点为空
 	// 计算长度
 	int len = 0;
 	SearchResult* p = CurRes->NextResult; // 工作指针指向首元结点
+	SearchResult* q;
 	while (p)
 	{
 		len++;
 		p = p->NextResult;
 	}
-	BF_QuickSort(CurRes, 1, len, 1);
+	q = BF_QuickSort(CurRes, 1, len, 1);
 
-	return OK;
+	return q;
 }
 
