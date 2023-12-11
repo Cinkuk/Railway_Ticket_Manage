@@ -208,6 +208,7 @@ Status FO_LoadTrainFromHD()
 			} // while (p)
 			// 新增车次
 			TM_NewTrain(_TrainNum, _Start, _StopList, _End, _LeaveTime, _Occupant, _SurplusTicket);
+			S_AddTrainToSearchDB(_TrainNum, _StopList);
 
 			// 清空ReadBlock，重置ReadBlock的Next指针为NULL
 			p = ReadBlock->NextLine; // p指向首元结点

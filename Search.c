@@ -2,7 +2,7 @@
 // 所依赖的关键变量存放于Variables_Lib.c中
 // 本文件的函数名以'S_'开头
 //
-// Test Status: Undo
+// Test Status: Working
 // Code Status: Working
 //
 // 函数与功能对应：
@@ -83,6 +83,7 @@ TrainIndexNode* S_RequestTINode()
 }
 
 // 返回VL_TI_DB中车次类别的入口指针
+// Freeze
 TrainIndexNode* S_Get_TIDB_HeadPointer(char* First)
 {
 	switch (*First)
@@ -103,6 +104,7 @@ TrainIndexNode* S_Get_TIDB_HeadPointer(char* First)
 }
 
 // 初始化VL_TI_DB
+// Freeze
 Status S_InitTIDB()
 {
 	TrainIndexDB* TopDB;
@@ -139,6 +141,7 @@ Status S_InitTIDB()
 }
 
 // 初始化VL_SI_DB
+// Freeze
 Status S_InitSIDB()
 {
 	StopIndexDB* TopNode;
@@ -274,6 +277,7 @@ RETURN:return p;
 }
 
 // 将车次信息结点新增进车次检索系统中
+// Freeze
 // input：车次编号，站点
 Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 {
@@ -377,7 +381,7 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 	psn = _StopName->next; // 指向途径站点首元结点
 	while (psn) // 站点列表未遍历完
 	{
-		_SID = VL_SI_DB->next ; // 指向首元结点
+		_SID = VL_SI_DB ; 
 		// 创建新车次结点
 		TrainNumList* NewTrainNum = (TrainNumList*)malloc(sizeof(TrainNumList));
 		if (!NewTrainNum) return NOSPACE;
@@ -394,8 +398,14 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 			if (strcmp(_SID->StationName, psn->name) == 0) 
 			{
 				// 插入为车次列表首元结点
-				NewTrainNum->next = _SID->TrainList->next;
-				_SID->TrainList->next = NewTrainNum;
+				if (!(_SID->TrainList)) _SID->TrainList = NewTrainNum;
+				else
+				{
+					NewTrainNum->next = _SID->TrainList->next;
+					_SID->TrainList->next = NewTrainNum;
+				}
+				break;
+				
 			} // if (strcmp(_SID->StationName, psn->name) == 0) 
 
 			// 遍历到最后结点，且途径站点不存在，创建为头结点
@@ -414,18 +424,19 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 				memset(NewSN, 0, sizeof(char) * STRLENGTH);
 
 				NewSID->NodeKind = NewNK;
-				NewSID->StationName - NewSN;
+				NewSID->StationName = NewSN;
 
 				// 赋值头结点
 				strcpy(NewSID->NodeKind, "E");
 				strcpy(NewSID->StationName, psn->name);
 				// 站点结点头节点加入车次
-				NewTrainNum->next = NewSID->TrainList->next;
-				NewSID->TrainList->next = NewTrainNum;
+				NewSID->TrainList = NewTrainNum;
 
 				// 插入为数据库尾结点
 				NewSID->next = _SID->next;
 				_SID->next = NewSID;
+
+				break;
 
 			} // else if (!(_SID->next)) 
 			

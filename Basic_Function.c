@@ -13,6 +13,7 @@
 //
 
 #include "V_Lib.h"
+#include "F_Lib.h"
 
 // 提取车次中的数字
 // freeze

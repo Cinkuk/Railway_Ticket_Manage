@@ -1,7 +1,5 @@
 #include "V_Lib.h"
 #include "F_Lib.h"
-#include <stdio.h>
-#include <string.h>
 
 static void TrainInfoTraverse();
 static void DisplayTrainInfoNode(SUB_TrainInfo*);
@@ -60,6 +58,7 @@ void main()
 	S_InitTIDB();
 	FO_LoadTrainFromHD();
 	TrainInfoTraverse();
+	return;
 }
 
 void TrainInfoTraverse()
