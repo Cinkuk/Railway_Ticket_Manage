@@ -58,7 +58,7 @@ void main()
 	OM_InitOrder();
 	S_InitSIDB();
 	S_InitTIDB();
-	LoadTrainFromHD();
+	FO_LoadTrainFromHD();
 	TrainInfoTraverse();
 }
 
@@ -71,17 +71,17 @@ void TrainInfoTraverse()
 	{
 		switch (i)
 		{
-		case 0: {printf("NO.G Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->G); break; }
-		case 1: {printf("NO.D Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->D); break; }
-		case 2: {printf("NO.C Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->C); break; }
-		case 3: {printf("NO.Z Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->Z); break; }
-		case 4: {printf("NO.T Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->T); break; }
-		case 5: {printf("NO.K Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->K); break; }
-		case 6: {printf("NO.Y Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->Y); break; }
-		case 7: {printf("NO.L Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->L); break; }
-		case 8: {printf("NO.S Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->S); break; }
-		case 9: {printf("NO.N Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->N); break; }
-		case 10: {printf("NO.P Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->P); break; }
+		case 0: {printf("\nNO.G Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->G); break; }
+		case 1: {printf("\nNO.D Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->D); break; }
+		case 2: {printf("\nNO.C Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->C); break; }
+		case 3: {printf("\nNO.Z Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->Z); break; }
+		case 4: {printf("\nNO.T Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->T); break; }
+		case 5: {printf("\nNO.K Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->K); break; }
+		case 6: {printf("\nNO.Y Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->Y); break; }
+		case 7: {printf("\nNO.L Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->L); break; }
+		case 8: {printf("\nNO.S Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->S); break; }
+		case 9: {printf("\nNO.N Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->N); break; }
+		case 10: {printf("\nNO.P Train Infomation belowing:\n\n"); DisplayTrainInfoNode(p->P); break; }
 		}
 		i++;
 	}
@@ -101,8 +101,8 @@ static void DisplayTrainInfoNode(SUB_TrainInfo* TN)
 		{
 			SN = TN->Stop->next;
 			LT = TN->StationLeaveTime->next;
-
-			printf("车次：%s\n", TN->TrainNum);
+			
+			printf("\n车次：%s\n", TN->TrainNum);
 			printf("始发站：%s\n", TN->Start);
 			printf("终到站：%s\n", TN->End);
 			printf("乘员定额：%d\n", TN->OccupantQuota);
@@ -114,13 +114,14 @@ static void DisplayTrainInfoNode(SUB_TrainInfo* TN)
 				printf("%-10s\t", SN->name);
 				SN = SN->next;
 			}
-			printf("\n\n各站点发车时间和区间运行时长\n");
+			printf("\n\n各站点\t发车时间\t区间运行时长\n");
 			while (LT)
 			{
-				printf("%-10s\t%d:%d\t%d\n", LT->name, LT->hour, LT->min, LT->ToNextMin);
+				printf("%-10s\t%02d:%02d\t%d\n", LT->name, LT->hour, LT->min, LT->ToNextMin);
 				LT = LT->next;
 			}
 			TN = TN->next;
+			printf("\n---------------------------------------------------------------------------------------------\n");
 		}
 		i++;
 		TN = p;

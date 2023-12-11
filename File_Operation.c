@@ -43,7 +43,7 @@ Status FO_LoadTrainFromHD()
 {
 	FILE* fp;
 	char* filename = "TrainIN.txt";
-	fp = fopen("TrainIN.txt", "r");
+	fp = fopen(filename, "r");
 
 	int BlockBegin = 0; // 0：忽略之后的内容，1：记录之后的内容
 	int coloum_index = 0; // 列号
