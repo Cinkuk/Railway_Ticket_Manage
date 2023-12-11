@@ -161,6 +161,8 @@ typedef struct TrainIndexNode
 	struct TrainIndexNode* NumIndex[10]; // 首位数字加快检索的指针数组
 	char* TrainNum; // 车次编号
 	StationList* StationNameList; // 按行进方向存放的所有站点
+
+	struct TrainIndexNode* NextTrain;
 }TrainIndexNode;
 
 // 数据库结构体

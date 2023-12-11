@@ -279,6 +279,51 @@ RETURN:return p;
 // input：车次编号，站点
 Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 {
+	// 工作指针
+	TrainIndexNode* _TIN;
+	StopIndexDB* _SID;
+	_TIN = S_Get_TIDB_HeadPointer(_TrainNum);
+	_SID=VL_SI_DB;
 	
+	////
+	// 分配内存空间
+	// StationList
+	StationList* SL = (StationList*)malloc(sizeof(StationList)); 
+	
+	if (!SL) return NOSPACE; // 无可用空间
+
+	// TrainIndexNode
+	TrainIndexNode* TIN = (TrainIndexNode*)malloc(sizeof(TrainIndexNode));
+	char* TIN_NK = (char*)malloc(sizeof(char)*3);
+	char* TIN_TrainNum = (char*)malloc(sizeof(char)*STRLENGTH);
+
+	if (!TIN|| !TIN_NK ||!TIN_TrainNum) return NOSPACE;
+
+	// TrainNumList
+	TrainNumList* TNL=(TrainNumList*)malloc(sizeof(TrainNumList)); 
+	char* CurNum = (char*)malloc(sizeof(char)*STRLENGTH);
+
+	if (!TNL || !CurNum) return NOSPACE;
+
+	// StopIndexDB
+	StopIndexDB* SID = (StopIndexDB*)malloc(sizeof(StopIndexDB));
+	char* SID_NK = (char*)malloc(sizeof(char)*3);
+	char* SID_SN = (char*)malloc(sizeof(char)*STRLENGTH);
+
+	if (!SID || !SID_NK || !SID_SN) return NOSPACE;
+
+	////
+	// Process 
+	// 将_StopName转换为StationList*
+	
+	
+
+	// 将车次数据加入VL_TI_DB;
+	
+
+
+
+	// 遍历站点，将车次加入VL_SI_DB
+
 }
 
