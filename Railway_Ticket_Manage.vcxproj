@@ -108,7 +108,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <StackReserveSize>524288000</StackReserveSize>
+      <StackReserveSize>1048576000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Basic_Function.c" />
+    <ClCompile Include="Display.c" />
     <ClCompile Include="File_Operation.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Order_Manage.c" />

@@ -79,10 +79,12 @@ char* OM_CreateOrderNum()
 		node = (OrderSet*)malloc(sizeof(struct OrderSet));
 		if (!node) return NULL; // 无可用空间申请编号
 		memset(node, 0, sizeof(OrderSet));
+		node->OrderKind = (char*)malloc(sizeof(char) * 5);
 
 		// 初始化为A000000001
 		node->ID[0] = 65; // 65为ASCII的A
-		for (int i = 1; i < 10; i++) node->ID[i] = 48; // 48为ASCII的0
+		for (int i = 1; i < 9; i++) node->ID[i] = 48; // 48为ASCII的0
+		node->ID[9] = 49;
 		node->ID[10] = '\0';
 
 		node->next = VL_OrderID->next;
@@ -96,6 +98,7 @@ char* OM_CreateOrderNum()
 		node = (OrderSet*)malloc(sizeof(struct OrderSet));
 		if (!node) return NULL; // 无可用空间申请编号
 		memset(node, 0, sizeof(OrderSet));
+		node->OrderKind = (char*)malloc(sizeof(char) * 5);
 	
 		for (i = 0; i <= 10; i++) node->ID[i] = VL_OrderID->next->ID[i]; // 复制前一张订单的编号
 		node->next = VL_OrderID->next;
@@ -114,8 +117,6 @@ char* OM_CreateOrderNum()
 
 		if (node->ID[0] > 90) return NULL; // 当前编号已超出最大值“Z999999999”
 
-		node->next = VL_OrderID->next;
-		VL_OrderID->next = node;
 
 		return BF_Merge_Char(node->ID);
 	}
@@ -148,8 +149,10 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	TrainNode = S_GetTrainNode(_TrainNum);
 	PhoneNode = S_GetPhoneOrderNode(_phone);
 
+	if (!TrainNode) return ERROR; // 无此班次
+
 	// TrainNode or PhoneNode为空结点或无可用空间建立订单编号_OrderNum
-	if (!_OrderNum || !TrainNode || !PhoneNode) return NOSPACE; 
+	if (!_OrderNum || !PhoneNode) return NOSPACE; 
 
 	// 判断是否能够购票
 	if (TrainNode->SurplusTicket < _TicketAmount) return ERROR;
@@ -209,7 +212,7 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 		// t指向当前订单结点
 		if (strcmp(BF_Merge_Char(t->ID),BF_Merge_Char(_OrderNum)) == 0)
 		{
-			t->OrderKind = "F"; // 订单类型为正式订单
+			strcpy(t->OrderKind, "F"); // 订单类型为正式订单
 			t->OrderNode = p; // 将当前订单链接进订单池内
 			t->WaitOrderNode = NULL;
 			break; // 退出循环

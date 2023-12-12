@@ -2,8 +2,8 @@
 // 所依赖的关键变量存放于Variables_Lib.c中
 // 本文件的函数名以'S_'开头
 //
-// Test Status: Working
-// Code Status: Working
+// Test Status: Freeze
+// Code Status: Freeze
 //
 // 函数与功能对应：
 // 
@@ -163,6 +163,7 @@ Status S_InitSIDB()
 }
 
 // 赋值VL_Or_Lib中数据元素的头结点
+// Freeze
 Status S_Fill_OrLib_HeadNode(PhoneOrderList* p)
 {
 	p->NodeKind = "H";
@@ -178,6 +179,7 @@ Status S_Fill_OrLib_HeadNode(PhoneOrderList* p)
 
 // 根据车次编号返回VL_Ti_Lib下的车次结点
 // output：对应头指针
+// Freeze
 SUB_TrainInfo* S_GetTrainNode(char* _TrainNum)
 {
 	char First = *_TrainNum; // 车次编号首字母
@@ -206,6 +208,7 @@ SUB_TrainInfo* S_GetTrainNode(char* _TrainNum)
 
 // 根据手机号返回VL_Or_Lib下的手机号结点
 // output：对应数据元素结点指针（无则创建该数据元素结点）
+// Freeze
 PhoneOrder* S_GetPhoneOrderNode(char* _phone)
 {
 	PhoneOrder* p, *PONode; // 工作指针
@@ -216,21 +219,8 @@ PhoneOrder* S_GetPhoneOrderNode(char* _phone)
 
 	while (p) // 遍历订单链表
 	{
-		for (i = 0; i <= 11; i++) // 手机号为11位
-		{
-			// 手机号逐位比较均相同
-			// 退出while循环并返回地址
-			if (*(p->phone + i) == '\0' && *(_phone + i) == '\0') // 手机逐位比较均相同
-			{
-				goto RETURN;
-			}
-			else if (*(p->phone + i) == *(_phone + i)); // 当前位相同，比较下一位
-			else // 当前位不同，p指向下一结点，本轮比较终止
-			{
-				p = p->next;
-				break;
-			}
-		} // for (i = 0; i <= 11; i++) 
+		if (strcmp(p->phone, _phone)==0) goto RETURN;
+		else p = p->next;
 	} // while (p)
 
 	if (!p) // 订单链表中无此手机号结点，创建并返回

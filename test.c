@@ -4,12 +4,18 @@
 static void TrainInfoTraverse();
 static void DisplayTrainInfoNode(SUB_TrainInfo*);
 static void DisplaySearchResult(SearchResult*);
+static void DisplayTrainNode(SUB_TrainInfo*);
+static void DisplayPhoneOrder(PhoneOrder*);
+
 void main()
 {	
 
+	S_InitSIDB();
+	S_InitTIDB();
 	TM_InitTicket();
 	OM_InitOrder();
 	OM_InitOrderID();
+	FO_LoadTrainFromHD();
 
 #if 0
 	// TEST BF_Merge_Char
@@ -57,29 +63,44 @@ void main()
 #endif
 
 
-	S_InitSIDB();
-	S_InitTIDB();
-	FO_LoadTrainFromHD();
 
 #if 0
 	TrainInfoTraverse();
 #endif
 
-
+#if 0
 	SearchResult* SR, *p;
 	SR=UF_SearchStop("上海虹桥", "无锡东");
-	p = UF_RunTimeSort(SR);
-	//p = UF_LeaveTimeSort(SR);
+	//p = UF_RunTimeSort(SR);
+	p = UF_LeaveTimeSort(SR);
 	DisplaySearchResult(p);
-
+#endif
 
 #if 0
-	OM_New_F_Order("13712345678", "D3802", "云浮东", "普者黑", 8);
-	OM_New_F_Order("13712345678", "D3802", "广州南", "大理", 500);
-	printf("%d", OM_New_F_Order("13712345649", "D3802", "广州南", "大理", 500));
-	OM_New_W_Order("13712345680", "D3802", "广州南", "昆明", 1);
-	OM_New_W_Order("13712345681", "D3802", "佛山西", "昆明南", 1);
+	UF_New_F_Order( "G44", "杭州东", "南京南", 8, "13712345678");
+	UF_New_F_Order("G46", "长兴", "济南西", 500,"13712345678");
+	printf("%d\n", UF_New_F_Order( "G44", "南京南", "天津南", 500,"13712345649"));
+	UF_New_W_Order("G44", "南京南", "徐州东", 1,"13712345680");
+	UF_New_W_Order( "G44", "南京南", "徐州东", 1,"13712345681");
+	
+	OrderSet* result=(Order*)malloc(sizeof(Order));
+
+	result=UF_GetOrderInfo("A000000002");
+	//if (strcmp(result->OrderKind, "F")==0) 
+
+	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345678"));
+	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345649"));
+	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345680"));
+	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345681"));
 #endif
+
+#if 0
+	DisplayTrainNode(S_GetTrainNode("D10"));
+	DisplayTrainNode(S_GetTrainNode("D7202"));
+	DisplayTrainNode(S_GetTrainNode("G1143"));
+	DisplayTrainNode(S_GetTrainNode("G4837"));
+#endif
+
 
 #if 0
 	OM_InitOrderID();
@@ -189,6 +210,34 @@ static void DisplayTrainInfoNode(SUB_TrainInfo* TN)
 
 }
 
+void DisplayTrainNode(SUB_TrainInfo* TN)
+{
+	StopName* SN;
+	LeaveTime* LT;
+	SN = TN->Stop->next;
+	LT = TN->StationLeaveTime->next;
+
+	printf("\n车次：%s\n", TN->TrainNum);
+	printf("始发站：%s\n", TN->Start);
+	printf("终到站：%s\n", TN->End);
+	printf("乘员定额：%d\n", TN->OccupantQuota);
+	printf("余票数量：%d\n\n", TN->SurplusTicket);
+
+	printf("途径站点如下：\n");
+	while (SN)
+	{
+		printf("%-10s\t", SN->name);
+		SN = SN->next;
+	}
+	printf("\n\n各站点\t发车时间\t区间运行时长\n");
+	while (LT)
+	{
+		printf("%-10s\t%02d:%02d\t%d\n", LT->name, LT->hour, LT->min, LT->ToNextMin);
+		LT = LT->next;
+	}
+	printf("\n---------------------------------------------------------------------------------------------\n");
+}
+
 void DisplaySearchResult(SearchResult* SR)
 {
 	SearchResult* p = SR->NextResult;
@@ -196,7 +245,23 @@ void DisplaySearchResult(SearchResult* SR)
 	printf("\t%-10s\t|\t%-15s\t|\t%-15s\t|\t%s\n", "班次", "出发时间", "到达时间", "余票"); // 运行时间
 	while (p)
 	{
-		printf("\t%-10s\t|\t%02d:%02d\t|\t%02d:%02d\t|\t%d\n", p->TrainNum, p->LeaveTime[0], p->LeaveTime[1], (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) / 60, (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) % 60, p->TrainNode->SurplusTicket);
+		printf("\t%-10s\t|\t%02d:%02d\t|\t%02d:%02d\t|\t%d %d\n", p->TrainNum, p->LeaveTime[0], p->LeaveTime[1], (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) / 60, (p->LeaveTime[0] * 60 + p->LeaveTime[1] + p->ToNextMin) % 60, p->TrainNode->SurplusTicket, p->ToNextMin);
 		p = p->NextResult;
+	}
+}
+
+void DisplayPhoneOrder(PhoneOrder* PN)
+{
+	printf("手机号：%s\n\n", PN->phone);
+	printf("----------------------------------------------------------------------\n");
+	PhoneOrderList* POL = PN->OrderList->NextOrder;
+	if (!(POL)) { printf("该手机号下无订单\n"); return; }
+	while(POL)
+	{
+		char* OS = (strcmp(POL->OrderStatus, "F") == 0) ? "正式订单": "候补订单";
+		char* TrainNum = POL->Train->TrainNum;
+		printf("订单类型：%s\n车次：%s\n出发站：%s\n终点站：%s\n订票张数：%d\n", OS, TrainNum, POL->LeaveStop, POL->ArriveStop, POL->TicketAmount);
+		printf("----------------------------------------------------------------------\n");
+		POL = POL->NextOrder;
 	}
 }

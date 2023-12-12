@@ -1,24 +1,14 @@
 // 本文件用于对文件进行读写操作
 // 本文件的函数名以'FO_'开头
 //
-// Test Status: Working
-// Code Status: Working
+// Test Status: Freeze
+// Code Status: Freeze
 //
 // 函数与功能对应：
 //
 // 从磁盘读取车次
 // Status FO_LoadTrainFromHD() 
 // return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
-// 
-// 从磁盘读取订单
-// Status FO_LoadOrderFromHD()
-// return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
-// 
-// 订单信息存盘
-// Status FO_SaveOrderToHD()
-// return: ERROR（文件写入失败）, NOSPACE（没有内存存储中间变量）, OK
-//
-//
 
 #include "F_Lib.h"
 #include "V_Lib.h"
@@ -222,14 +212,3 @@ Status FO_LoadTrainFromHD()
 	return OK;
 }
 
-// 从磁盘读取订单
-Status FO_LoadOrderFromHD()
-{
-
-}
-
-// 订单信息存盘
-Status FO_SaveOrderToHD()
-{
-
-}

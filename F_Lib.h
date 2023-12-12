@@ -38,15 +38,13 @@ extern PhoneOrder* S_GetPhoneOrderNode(char* );
 // Basic_Function.c
 extern int BF_Get_Train_Number(char*);
 extern char* BF_Merge_Char(char[]);
-extern SearchResult* BF_QuickSort(SearchResult*, int, int, int);
 extern int BF_StrToInt(char*);
 extern int BF_StrToMin(char*);
 
 
 // UserFunction.c
 extern SearchResult* UF_SearchStop(char*, char*);
-extern int UF_GetOrderInfo(char*, void*);
-extern PhoneOrderList* UF_GetPhoneOrder(char* );
+extern OrderSet* UF_GetOrderInfo(char*);
 extern Status UF_New_F_Order(char*, char*, char*, int, char*);
 extern Status UF_New_W_Order(char*, char*, char*, int, char*);
 extern Status UF_Delete_Order(char*);
@@ -55,9 +53,4 @@ extern SearchResult* UF_RunTimeSort(SearchResult* );
 
 // File_Operation.c
 extern Status FO_LoadTrainFromHD();
-extern Status FO_LoadOrderFromHD();
-extern Status FO_LoadDBFromHD();
-extern Status FO_SaveTrainToHD();
-extern Status FO_SaveOrderToHD();
-extern Status FO_SaveDBToHD();
 

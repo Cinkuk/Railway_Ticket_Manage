@@ -1,8 +1,8 @@
 // 本文件用于比较、提取字符等基础函数
 // 本文件的函数名以'BF_'开头
 //
-// Test Status: Working
-// Code Status: Working
+// Test Status: Freeze
+// Code Status: Freeze
 //
 // 函数与功能对应：
 // 
@@ -44,209 +44,13 @@ int BF_Get_Train_Number(char* TrainNum)
 char* BF_Merge_Char(char in[])
 {
 	char* ch;
-	ch = (char*)malloc(sizeof(char) * 10);
+	ch = (char*)malloc(sizeof(char) * STRLENGTH);
 	if (!ch) return NULL;
 	int i;
-	for (i = 0; i < 10; i++) *(ch + i) = in[i];
+	for (i = 0; i < 11; i++) *(ch + i) = in[i];
 	return ch;
 }
 
-// Partition for QuickSort
-// KeyKind: 0:按照出发时间, 1:按照运行时间
-int BF_Partition(SearchResult* A, int p, int r, int KeyKind)
-{
-	SearchResult* ptr; // 工作指针
-	SearchResult* ptr_i, *ptr_j, *ptr_r, *temp1, *temp2, *ptr_2; // 工作指针
-
-	ptr = A->NextResult;
-	int Index=0;
-
-	int x; // pivot Value
-	int i; // highest index into the low side
-
-	
-	i = p - 1;// 赋值i
-	
-	// 工作指针定位
-	ptr = A->NextResult;
-	Index = 0;
-	while (ptr)
-	{
-		Index++;
-
-		if (Index == r) ptr_r = ptr;
-		else if (Index == p - 1) ptr_i = ptr;
-		else if (Index == p) ptr_j = ptr;
-
-		ptr = ptr->NextResult;
-	}
-
-	// 赋值x
-	if (KeyKind == 0) // 按照出发时间
-		x = (ptr_r->LeaveTime[0]) * 60 + (ptr_r->LeaveTime[1]);
-	else if (KeyKind == 1) // 按照运行时间
-		x = ptr_r->ToNextMin;
-	
-	ptr = A->NextResult;
-
-	// 按照出发时间排序
-	if (KeyKind == 0)
-	{
-		for (int j = p; j <= r - 1; j++)
-		{
-			// if A[j] <= x
-			if ((ptr_j->LeaveTime[0] * 60 + ptr_j->LeaveTime[1]) <= x)
-			{	
-				// i++
-				i++;
-				if (i == 1) ptr_i = ptr;
-				else ptr_i = ptr_i->NextResult;
-
-				// exchange A[j] with A[i]
-				if (i != j)
-				{
-					temp1 = ptr_i; temp2 = ptr_j;
-					ptr = A->NextResult;
-					ptr_2 = A->NextResult;
-					while (ptr) // ptr->next is ptr_i
-					{
-						if (ptr->NextResult == ptr_i) break;
-						ptr = ptr->NextResult;
-					}
-					while (ptr_2) // ptr_2->next is ptr_j
-					{
-						if (ptr_2->NextResult == ptr_j) break;
-						ptr_2 = ptr_2->NextResult;
-					}
-					ptr->NextResult = ptr_i->NextResult;
-					ptr_2->NextResult = ptr_j->NextResult;
-					temp1->NextResult = ptr_2->NextResult; ptr_2->NextResult = temp1;
-					temp2->NextResult = ptr->NextResult; ptr->NextResult = temp2;
-				}
-
-			
-
-			} // if ((ptr_j->LeaveTime[0] * 60 + ptr_j->LeaveTime[1]) <= x)
-
-			// j point to next, means j++
-			// imitate for j = p to r-1
-			ptr_j = ptr_j->NextResult;
-
-		} // for (int j = p; j <= r - 1; j++)
-		
-
-		// exchange A[r] with A[i+1]
-		// ptr_i point to i+1
-		if (r != (i + 1))
-		{
-			ptr_i = ptr_i->NextResult;
-			temp1 = ptr_i; temp2 = ptr_r;
-			ptr = A->NextResult;
-			ptr_2 = A->NextResult;
-			while (ptr) // ptr->next is ptr_i
-			{
-				if (ptr->NextResult == ptr_i) break;
-				ptr = ptr->NextResult;
-			}
-			while (ptr_2) // ptr_2->next is ptr_r
-			{
-				if (ptr_2->NextResult == ptr_r) break;
-				ptr_2 = ptr_2->NextResult;
-			}
-			ptr->NextResult = ptr_i->NextResult;
-			ptr_2->NextResult = ptr_r->NextResult;
-			temp1->NextResult = ptr_2->NextResult; ptr_2->NextResult = temp1;
-			temp2->NextResult = ptr->NextResult; ptr->NextResult = temp2;
-		}
-
-		return (++i);
-	} // 	if (KeyKind == 0)
-
-	// 按照运行时间排序
-	else if (KeyKind == 1)
-	{
-		for (int j = p; j <= r - 1; j++)
-		{
-			// if A[j] <= x
-			if ((ptr_j->ToNextMin) <= x)
-			{	
-				// i++
-				i++;
-				if (i == 1) ptr_i = ptr;
-				else ptr_i = ptr_i->NextResult;
-
-				// exchange A[j] with A[i]
-				if (i != j)
-				{
-					temp1 = ptr_i; temp2 = ptr_j;
-					ptr = A->NextResult;
-					ptr_2 = A->NextResult;
-					while (ptr) // ptr->next is ptr_i
-					{
-						if (ptr->NextResult == ptr_i) break;
-						ptr = ptr->NextResult;
-					}
-					while (ptr_2) // ptr_2->next is ptr_j
-					{
-						if (ptr_2->NextResult == ptr_j) break;
-						ptr_2 = ptr_2->NextResult;
-					}
-					ptr->NextResult = ptr_i->NextResult;
-					ptr_2->NextResult = ptr_j->NextResult;
-					temp1->NextResult = ptr_2->NextResult; ptr_2->NextResult = temp1;
-					temp2->NextResult = ptr->NextResult; ptr->NextResult = temp2;
-				}
-											
-
-			} // if ((ptr_j->ToNextMin) <= x)
-
-			// j point to next
-			// imitate for j = p to r-1
-			ptr_j = ptr_j->NextResult;
-
-		} // for (int j = p; j <= r - 1; j++)
-		
-		// exchange A[r] with A[i+1]
-		// ptr_i point to i+1
-		if (r != (i + 1))
-		{
-			ptr_i = ptr_i->NextResult;
-			temp1 = ptr_i; temp2 = ptr_r;
-			ptr = A->NextResult;
-			ptr_2 = A->NextResult;
-			while (ptr) // ptr->next is ptr_i
-			{
-				if (ptr->NextResult == ptr_i) break;
-				ptr = ptr->NextResult;
-			}
-			while (ptr_2) // ptr_2->next is ptr_r
-			{
-				if (ptr_2->NextResult == ptr_r) break;
-				ptr_2 = ptr_2->NextResult;
-			}
-			ptr->NextResult = ptr_i->NextResult;
-			ptr_2->NextResult = ptr_r->NextResult;
-			temp1->NextResult = ptr_2->NextResult; ptr_2->NextResult = temp1;
-			temp2->NextResult = ptr->NextResult; ptr->NextResult = temp2;
-		}
-		return (++i);
-	} // 	if (KeyKind == 1)
-	
-}
-
-// QuickSort
-SearchResult* BF_QuickSort(SearchResult* A, int p, int r, int KeyKind)
-{
-	int q;
-	if (p < r)
-	{
-		q = BF_Partition(A, p, r, KeyKind);
-		BF_QuickSort(A, p, q - 1, KeyKind);
-		BF_QuickSort(A, q + 1, r, KeyKind);
-	}
-	return A;
-
-}
 
 // 传入字符串格式的数字，转换为数字
 // freeze

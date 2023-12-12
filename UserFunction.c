@@ -16,11 +16,6 @@
 // input：订单号
 // return：1:正式订单，2：候补订单，3：无此订单
 // 
-// 查询手机号下的订单
-// PhoneOrderList* UF_GetPhoneOrder(char* _phone)
-// input：手机号
-// return：该手机号下订单的头结点指针，NULL（不存在的手机号)
-// 
 // 下正式订单
 // Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
 //	                     int _TicketNum, char* _phone)
@@ -200,60 +195,30 @@ SearchResult* UF_SearchStop(char* _Leave, char* _Arrive)
 } // Status SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
 
 // 查询订单
+// Freeze
 // input：订单号
 // return：1:正式订单，2：候补订单，3：无此订单
-int UF_GetOrderInfo(char* _OrderNum, void* ResultPtr )
+OrderSet* UF_GetOrderInfo(char* _OrderNum)
 {
 	OrderSet* p; // 工作指针
 	p = VL_OrderID;
 
 	while (p) // 遍历订单池
 	{
-		if (strcmp(p->ID, _OrderNum) == 0) // 匹配到订单
+		if (strcmp(BF_Merge_Char(p->ID), _OrderNum) == 0) // 匹配到订单
 		{
-			if (strcmp(p->OrderKind, "F") == 0) // 正式订单
-			{
-				ResultPtr = p->OrderNode;
-				return 1;
-			}
-			else if (strcmp(p->OrderKind, "W") == 0) // 候补订单
-			{
-				ResultPtr = p->WaitOrderNode;
-				return 2;
-			}
+			return p;
 		} // 	if (strcmp(p->ID, _OrderNum) == 0)
 
 		p = p->next; // 下一张单
 	} // while (p)
 
 	// 匹配不到订单
-	ResultPtr = NULL;
-	return 3;
-}
-
-// 查询手机号下的订单
-// input：手机号
-// return：该手机号下订单的头结点指针，NULL（不存在的手机号)
-PhoneOrderList* UF_GetPhoneOrder(char* _phone)
-{
-	PhoneOrder* p; // 工作指针
-	p = VL_Or_Lib->next; // 指向订单数据库首元结点
-
-	while (p) // 遍历订单数据库
-	{
-		if (strcmp(p->phone, _phone) == 0) // 匹配到手机号
-		{
-			return p->OrderList;
-		}
-		else // 下一张单
-			p = p->next;
-	}
-
-	// 无此手机号
 	return NULL;
 }
 
 // 下正式订单
+// Freeze
 // input: 车次，出发站，到达站，订购票数，手机号
 // output: OK, ERROR, NOSPACE
 Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
@@ -266,6 +231,7 @@ Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive,
 }
 
 // 下候补订单
+// Freeze
 // input: 车次，出发站，到达站，订购票数，手机号
 // output: OK, ERROR, NOSPACE
 Status UF_New_W_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
@@ -286,39 +252,96 @@ Status UF_Delete_Order(char* OrderNum)
 }
 
 // 按照出发时间递增排序
+// Freeze
 SearchResult* UF_LeaveTimeSort(SearchResult* CurRes)
 {
-	if (!CurRes->NextResult) return NULL; // 首元结点为空
-	// 计算长度
+
+	if (!CurRes) return ERROR; 
 	int len = 0;
-	SearchResult* p = CurRes->NextResult; // 工作指针指向首元结点
-	SearchResult* q;
+	SearchResult* p = CurRes->NextResult ; // 工作指针指向首元结点
+	SearchResult* r, *r_n, *curh, *temp;
+
+	// 计算长度
 	while (p)
 	{
 		len++;
 		p = p->NextResult;
 	}
-	q = BF_QuickSort(CurRes, 1, len, 0);
+	
+	if (len == 1) return CurRes;
 
-	return q;
+	// 断开第一和第二个元素
+	r = CurRes->NextResult;
+	curh = CurRes->NextResult->NextResult;
+	r->NextResult = NULL;
+
+	// r_n为比较元素
+	r = CurRes;
+	r_n = r->NextResult;
+
+	while (curh)
+	{
+		while (r_n != NULL && (curh->LeaveTime[0]*60+curh->LeaveTime[1]) >= (r_n->LeaveTime[0]*60+r_n->LeaveTime[1]))
+		{
+			r = r->NextResult;
+			r_n = r_n->NextResult;
+		}
+		temp = curh;
+		curh = curh->NextResult;
+		r->NextResult = temp;
+		temp->NextResult = r_n;
+		r = CurRes;
+		r_n = r->NextResult;
+
+	}
+
+	return CurRes;
 }
 
 
 // 按照运行时间递增排序
+// Freeze
 SearchResult* UF_RunTimeSort(SearchResult* CurRes)
 {
-	if (!CurRes) return ERROR; // 首元结点为空
-	// 计算长度
+	if (!CurRes) return ERROR; 
 	int len = 0;
-	SearchResult* p = CurRes->NextResult; // 工作指针指向首元结点
-	SearchResult* q;
+	SearchResult* p = CurRes->NextResult ; // 工作指针指向首元结点
+	SearchResult* r, *r_n, *curh, *temp;
+
+	// 计算长度
 	while (p)
 	{
 		len++;
 		p = p->NextResult;
 	}
-	q = BF_QuickSort(CurRes, 1, len, 1);
+	
+	if (len == 1) return CurRes;
 
-	return q;
+	// 断开第一和第二个元素
+	r = CurRes->NextResult;
+	curh = CurRes->NextResult->NextResult;
+	r->NextResult = NULL;
+
+	// r_n为比较元素
+	r = CurRes;
+	r_n = r->NextResult;
+
+	while (curh)
+	{
+		while (r_n != NULL && curh->ToNextMin >= r_n->ToNextMin)
+		{
+			r = r->NextResult;
+			r_n = r_n->NextResult;
+		}
+		temp = curh;
+		curh = curh->NextResult;
+		r->NextResult = temp;
+		temp->NextResult = r_n;
+		r = CurRes;
+		r_n = r->NextResult;
+
+	}
+
+	return CurRes;
 }
 
