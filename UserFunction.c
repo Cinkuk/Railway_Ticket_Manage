@@ -34,7 +34,17 @@
 // output: OK, ERROR
 // 
 // 
-// 
+// 按照出发时间递增排序
+// Freeze
+// SearchResult* UF_LeaveTimeSort(SearchResult* CurRes)
+//
+// 按照运行时间递增排序
+// Freeze
+// SearchResult* UF_RunTimeSort(SearchResult* CurRes)
+//
+// 按照到达时间递增排序
+// Freeze
+// SearchResult* UF_ArriveTimeSort(SearchResult* CurRes)
 // 
 //  
 //
@@ -329,6 +339,53 @@ SearchResult* UF_RunTimeSort(SearchResult* CurRes)
 	while (curh)
 	{
 		while (r_n != NULL && curh->ToNextMin >= r_n->ToNextMin)
+		{
+			r = r->NextResult;
+			r_n = r_n->NextResult;
+		}
+		temp = curh;
+		curh = curh->NextResult;
+		r->NextResult = temp;
+		temp->NextResult = r_n;
+		r = CurRes;
+		r_n = r->NextResult;
+
+	}
+
+	return CurRes;
+}
+
+// 按照到达时间递增排序
+// Freeze
+SearchResult* UF_ArriveTimeSort(SearchResult* CurRes)
+{
+
+	if (!CurRes) return ERROR; 
+	int len = 0;
+	SearchResult* p = CurRes->NextResult ; // 工作指针指向首元结点
+	SearchResult* r, *r_n, *curh, *temp;
+
+	// 计算长度
+	while (p)
+	{
+		len++;
+		p = p->NextResult;
+	}
+	
+	if (len == 1) return CurRes;
+
+	// 断开第一和第二个元素
+	r = CurRes->NextResult;
+	curh = CurRes->NextResult->NextResult;
+	r->NextResult = NULL;
+
+	// r_n为比较元素
+	r = CurRes;
+	r_n = r->NextResult;
+
+	while (curh)
+	{
+		while (r_n != NULL && (curh->ArriveTime[0]*60+curh->ArriveTime[1]) >= (r_n->ArriveTime[0]*60+r_n->ArriveTime[1]))
 		{
 			r = r->NextResult;
 			r_n = r_n->NextResult;

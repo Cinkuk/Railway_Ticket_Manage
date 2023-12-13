@@ -68,15 +68,13 @@ void main()
 	TrainInfoTraverse();
 #endif
 
-#if 0
 	SearchResult* SR, *p;
 	SR=UF_SearchStop("上海虹桥", "无锡东");
 	//p = UF_RunTimeSort(SR);
-	p = UF_LeaveTimeSort(SR);
-	DisplaySearchResult(p);
-#endif
+	//p = UF_LeaveTimeSort(SR);
+	p = UF_ArriveTimeSort(SR);
+	//DisplaySearchResult(p);
 
-#if 0
 	UF_New_F_Order( "G44", "杭州东", "南京南", 8, "13712345678");
 	UF_New_F_Order("G46", "长兴", "济南西", 500,"13712345678");
 	printf("%d\n", UF_New_F_Order( "G44", "南京南", "天津南", 500,"13712345649"));
@@ -85,9 +83,11 @@ void main()
 	
 	OrderSet* result=(Order*)malloc(sizeof(Order));
 
-	result=UF_GetOrderInfo("A000000002");
+	result=UF_GetOrderInfo("A000000102");
+	printf("");
 	//if (strcmp(result->OrderKind, "F")==0) 
 
+#if 0
 	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345678"));
 	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345649"));
 	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345680"));
