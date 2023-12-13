@@ -61,4 +61,6 @@ extern Status FO_LoadTrainFromHD();
 // Display.c
 extern void DP_CheckTrain();
 extern void DP_CheckOrder();
-
+extern void DP_CheckPhoneOrder();
+extern void DP_WithdrawOrder();
+extern void DP_ExitSys();

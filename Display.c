@@ -381,7 +381,7 @@ void DP_CheckOrder()
 	return;
 }
 
-void DP_ChechPhoneOrder()
+void DP_CheckPhoneOrder()
 {
 	// “请输入手机号”
 	// 显示信息 有/无
