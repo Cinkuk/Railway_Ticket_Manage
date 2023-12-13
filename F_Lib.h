@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <memory.h>
+#include <Windows.h>
 
 // Ticket_Manage.c
 extern SUB_TrainInfo* TM_RequestSUBTrainHeadNode();
