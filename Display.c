@@ -154,12 +154,12 @@ void DP_CheckTrain()
 						{
 							// 确认信息
 							printf("\t以下为订单信息：\n");
-							printf("\t车次编号：%s\n出发站：%s\n到达站：%s\n出发时间：%s\n到达时间：%s\n购票张数：%d\n", \
+							printf("\t车次编号：%s\n出发站：%s\n到达站：%s\n出发时间：%02d：%02d\n到达时间：%02d：%02d\n购票张数：%d\n", \
 								TrainNum, \
 								Leave, \
 								Arrive, \
-								BF_TimeToStr(q->LeaveTime[0], q->LeaveTime[1]), \
-								BF_TimeToStr(q->ArriveTime[0], q->ArriveTime[1]), \
+								q->LeaveTime[0], q->LeaveTime[1], \
+								q->ArriveTime[0], q->ArriveTime[1], \
 								Ticket);
 							printf("\n\t确认？\n\ty：确认订单\n\tn：放弃订单\n");
 							
@@ -210,12 +210,12 @@ void DP_CheckTrain()
 						{
 							// 确认信息
 							printf("\t以下为订单信息：\n");
-							printf("\t车次编号：%s\n出发站：%s\n到达站：%s\n出发时间：%s\n到达时间：%s\n购票张数：%d\n", \
+							printf("\t车次编号：%s\n出发站：%s\n到达站：%s\n出发时间：%02d：%02d\n到达时间：%02d：02d\n购票张数：%d\n", \
 								TrainNum, \
 								Leave, \
 								Arrive,\
-								BF_TimeToStr(q->LeaveTime[0], q->LeaveTime[1]),\
-								BF_TimeToStr(q->ArriveTime[0], q->ArriveTime[1]), \
+								q->LeaveTime[0], q->LeaveTime[1],\
+								q->ArriveTime[0], q->ArriveTime[1], \
 								Ticket);
 							printf("\t余票数量不足，是否进入候补？\n");
 							printf("\n\ty：进入候补\n\tn：放弃\n");
@@ -400,7 +400,7 @@ void DP_CheckOrder()
 
 				if (strcmp(order->OrderNode->phone, ph) == 0)
 				{
-					printf("t\查询到订单编号为%s的信息如下：\n\n", OrderNum);
+					printf("\t查询到订单编号为%s的信息如下：\n\n", OrderNum);
 					printf("\t订单类型：正式订单\n");
 					printf("%5s|%2s%-10s%3s|%2s%-10s%3s|%2s%-10s%6s|%2s%-10s%3s|%2s%-8s%3s|%5s\n",\
 					" ", " ", "车次编号", " ", " ", "订单编号", " ", " ", "出发地", " ", " ", "到达地", " ", " ", "购票张数", " ", " ");

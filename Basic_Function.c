@@ -10,6 +10,14 @@
 // int BF_Get_Train_Number(chat* TrainNum)
 // 返回值：对应的数字, -1（传入空值）
 //
+// 传入10位字符数组，输出字符串
+// char* BF_Merge_Char(char in[])
+// 
+// 传入字符串格式的数字，转换为数字
+// int BF_StrToInt(char* inp)
+//
+// 传入时间，返回分钟总数
+// int BF_StrToMin(char* time)
 //
 
 #include "V_Lib.h"
@@ -51,7 +59,6 @@ char* BF_Merge_Char(char in[])
 	return ch;
 }
 
-
 // 传入字符串格式的数字，转换为数字
 // freeze
 int BF_StrToInt(char* inp)
@@ -91,36 +98,3 @@ int BF_StrToMin(char* time)
 	return sum_h * 60 + sum_m;
 }
 
-// 传入时间，返回字符串
-char* BF_TimeToStr(int hour, int min)
-{
-	char time[20];
-	memset(time, 0, sizeof(time));
-	if (hour < 9)
-	{
-		time[0] = 48;
-		time[1] = hour + 48;
-	}
-	else
-	{
-		time[0] = (hour / 10) + 48;
-		time[1] = (hour % 10) + 48;
-	}
-	
-	time[2] = 58;
-
-	if (min < 9)
-	{
-		time[3] = 48;
-		time[4] = min + 48;
-	}
-	else
-	{
-		time[3] = (min / 10) + 48;
-		time[4] = (min % 10) + 48;
-	}
-	time[5] = '\0';
-
-	return time;
-
-}

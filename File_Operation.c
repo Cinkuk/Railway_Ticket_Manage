@@ -9,6 +9,7 @@
 // 从磁盘读取车次
 // Status FO_LoadTrainFromHD() 
 // return: ERROR（文件打开失败）, NOSPACE（没有内存读入文件）, OK
+// 
 
 #include "F_Lib.h"
 #include "V_Lib.h"

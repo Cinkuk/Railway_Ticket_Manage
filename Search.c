@@ -12,7 +12,7 @@
 // return: NULL, 对应头结点地址
 // 
 // 返回VL_TI_DB中车次类别的入口指针
-// TrainIndexNode* S_GetTIHeadPointer(char*)
+// TrainIndexNode* S_Get_TIDB_HeadPointer(char*)
 // return: NULL, 对应头结点指针
 // 
 // 初始化VL_TI_DB
@@ -23,10 +23,8 @@
 // Status S_InitSIDB()
 // return: NOSPACE, OK
 // 
-// 将车次信息结点新增进车次检索系统中
-// Status S_AddTrainToSearchDB(char*, StopName*) 
-// input：车次编号，站点
-// return: OK, NOSPACE
+// 赋值VL_Or_Lib中数据元素的头结点
+// Status S_Fill_OrLib_HeadNode(PhoneOrderList* p)
 //
 // 根据车次编号返回VL_Ti_Lib下的车次结点
 // SUB_TrainInfo* S_GetTrainNode(char*)
@@ -37,6 +35,12 @@
 // PhoneOrder* S_GetPhoneOrder(char*)
 // input：电话
 // return：对应数据元素结点指针（无则创建该数据元素结点）, NULL（无现成结点，也无空间创建结点）
+// 
+// 将车次信息结点新增进车次检索系统中
+// Status S_AddTrainToSearchDB(char*, StopName*) 
+// input：车次编号，站点
+// return: OK, NOSPACE
+//
 //
 
 #include "F_Lib.h"
@@ -425,6 +429,4 @@ Status S_AddTrainToSearchDB(char* _TrainNum, StopName* _StopName)
 	
 	return OK;
 }
-
-
 

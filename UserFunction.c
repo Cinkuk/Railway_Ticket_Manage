@@ -1,18 +1,18 @@
 // 本文件存放的函数面向用户的操作
 // 本文件的函数名以'UF_'开头
 //
-// Test Status: Undo
+// Test Status: Working
 // Code Status: Working
 //
 // 函数与功能对应：
 //
 // 查询，输入出发地、目的地
-// Status SearchStop(char* _Leave, char* _Arrive, SearchResult* SR)
+// SearchResulr* UF_SearchStop(char* _Leave, char* _Arrive)
 // 输入：出发站，到达站，返回结果结构体空指针
 // return：OK, ERROR（出发站不存在）, NOSPACE, EMPTY（无可用班次）
 // 
 // 查询订单
-// int UF_GetOrderInfo(char* _OrderNum, void* ResultPtr )
+// OrderSet* UF_GetOrderInfo(char* _OrderNum)
 // input：订单号
 // return：1:正式订单，2：候补订单，3：无此订单
 // 
@@ -29,24 +29,21 @@
 // output: OK, ERROR, NOSPACE
 // 
 // 删除订单
-//Status UF_Delete_Order(char* OrderNum)
+// Status UF_Delete_Order(char* OrderNum)
 // input: 订单号
 // output: OK, ERROR
 // 
-// 
 // 按照出发时间递增排序
-// Freeze
 // SearchResult* UF_LeaveTimeSort(SearchResult* CurRes)
 //
 // 按照运行时间递增排序
-// Freeze
 // SearchResult* UF_RunTimeSort(SearchResult* CurRes)
 //
 // 按照到达时间递增排序
-// Freeze
 // SearchResult* UF_ArriveTimeSort(SearchResult* CurRes)
 // 
-//  
+// 获取手机号下的订单结点
+// PhoneOrder* UF_GetPhoneOrderNode(char* phone)
 //
 
 #include "F_Lib.h"
@@ -308,7 +305,6 @@ SearchResult* UF_LeaveTimeSort(SearchResult* CurRes)
 	return CurRes;
 }
 
-
 // 按照运行时间递增排序
 // Freeze
 SearchResult* UF_RunTimeSort(SearchResult* CurRes)
@@ -407,3 +403,4 @@ PhoneOrder* UF_GetPhoneOrderNode(char* phone)
 {
 	return S_GetPhoneOrderNode(phone);
 }
+

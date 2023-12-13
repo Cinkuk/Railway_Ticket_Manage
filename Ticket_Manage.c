@@ -20,7 +20,7 @@
 // 返回值：OK, NOSPACE
 // 
 // 返回VL_Ti_Lib中对应车次开头的头指针
-// SUB_TrainInfo * TM_GetHeadPointer(char*)
+// SUB_TrainInfo * TM_Get_TiLib_HeadPointer(char*)
 // 返回值：对应车次的SUB_TrainInfo指针, NULL（不存在）
 // 
 // 将车次信息结点依照升序插入到对应位置
@@ -32,8 +32,6 @@
 //	                  LeaveTime* , int , int )
 // 返回值：NOSPACE, OK
 // 
-// 
-//
 
 #include "V_Lib.h"
 #include "F_Lib.h"

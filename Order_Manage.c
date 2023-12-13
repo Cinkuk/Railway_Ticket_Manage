@@ -8,8 +8,11 @@
 // 函数与功能对应:
 // 
 // 初始化VL_Or_Lib
-// OM_InitOrder()：初始化VL_Or_Lib
+// Status OM_InitOrder()
 // 返回值：NOSPACE, OK
+// 
+// // 初始化订单池
+// Status OM_InitOrderID()
 // 
 // 创建唯一的订单编号
 // char* OM_CreateOrderNum()
@@ -22,7 +25,7 @@
 // return: NOSPACE, OK, ERROR
 //
 // 创建新的候补订单
-//Status OM_New_W_Order(char* _phone, char* _TrainNum,
+// Status OM_New_W_Order(char* _phone, char* _TrainNum,
 //	                    char* _LeaveStop, char* _ArriveStop, int _TicketSmount)
 // input：手机号、车次、出发站、到达站、订票张数
 // return: NOSPACE, OK

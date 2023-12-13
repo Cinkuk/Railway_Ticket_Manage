@@ -31,18 +31,16 @@ extern TrainIndexNode* S_RequestTINode();
 extern TrainIndexNode* S_Get_TIDB_HeadPointer(char*);
 extern Status S_InitTIDB();
 extern Status S_InitSIDB();
-extern Status S_AddTrainToSearchDB(char* , StopName* );
+extern Status S_Fill_OrLib_HeadNode(PhoneOrderList* p);
 extern SUB_TrainInfo* S_GetTrainNode(char* );
 extern PhoneOrder* S_GetPhoneOrderNode(char* );
-
+extern Status S_AddTrainToSearchDB(char* , StopName* );
 
 // Basic_Function.c
 extern int BF_Get_Train_Number(char*);
 extern char* BF_Merge_Char(char[]);
 extern int BF_StrToInt(char*);
 extern int BF_StrToMin(char*);
-extern char* BF_TimeToStr(int, int);
-
 
 // UserFunction.c
 extern SearchResult* UF_SearchStop(char*, char*);
