@@ -164,7 +164,7 @@ SearchResult* UF_SearchStop(char* _Leave, char* _Arrive)
 		{
 			// 为SR分配空间，无可用空间则返回空指针
 			NEW_SR = (SearchResult*)malloc(sizeof(SearchResult));
-			if (!NEW_SR) return NOSPACE;
+			if (!NEW_SR) return NULL;
 			NEW_SR->TrainNum = CurTrain; // 车次编号
 			NEW_SR->Leave = _Leave; // 出发地
 			NEW_SR->Arrive = _Arrive; // 到达地
@@ -402,3 +402,8 @@ SearchResult* UF_ArriveTimeSort(SearchResult* CurRes)
 	return CurRes;
 }
 
+// 获取手机号下的订单结点
+PhoneOrder* UF_GetPhoneOrderNode(char* phone)
+{
+	return S_GetPhoneOrderNode(phone);
+}

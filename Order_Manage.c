@@ -49,7 +49,7 @@ Status OM_InitOrder()
 	if (!p) return NOSPACE; // 无可用空间
 	// 初始化变量值
 	p->NodeKind = "H";
-	p->phone = -1;
+	p->phone = NULL;
 	p->OrderList = NULL;
 	p->next = NULL;
 
@@ -171,6 +171,7 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	q->OrderStatus = (char*)malloc(sizeof(char) * STRLENGTH);
 	q->LeaveStop = (char*)malloc(sizeof(char) * STRLENGTH);
 	q->ArriveStop = (char*)malloc(sizeof(char) * STRLENGTH);
+	q->OrderNum = (char*)malloc(sizeof(char) * STRLENGTH);
 
 	// 订单类型
 	p->NodeKind = "E";
@@ -178,6 +179,7 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	q->OrderStatus =  "F";
 
 	strcpy(p->OrderNum, _OrderNum); // 订单编号
+	strcpy(q->OrderNum, _OrderNum);
 	strcpy(p->TrainNum, _TrainNum); // 车次编号
 	strcpy(p->phone, _phone); // 手机号
 
@@ -268,6 +270,7 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	q->OrderStatus = (char*)malloc(sizeof(char) * STRLENGTH);
 	q->LeaveStop = (char*)malloc(sizeof(char) * STRLENGTH);
 	q->ArriveStop = (char*)malloc(sizeof(char) * STRLENGTH); 
+	q->OrderNum = (char*)malloc(sizeof(char) * STRLENGTH); 
 	
 	// 订单类型
 	p->NodeKind = "E";
@@ -275,6 +278,7 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	q->OrderStatus = "W";
 
 	strcpy(p->OrderNum, _OrderNum); // 订单编号
+	strcpy(q->OrderNum, _OrderNum);
 	strcpy(p->TrainNum, _TrainNum); // 车次编号
 	strcpy(p->phone, _phone); // 手机号
 

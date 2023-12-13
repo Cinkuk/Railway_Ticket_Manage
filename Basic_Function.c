@@ -91,32 +91,12 @@ int BF_StrToMin(char* time)
 	return sum_h * 60 + sum_m;
 }
 
-// 传入数字，返回字符串
-char* BF_IntToStr(int num)
-{
-	char* ch = (char*)malloc(sizeof(char) * STRLENGTH);
-	int numarray[STRLENGTH];
-	int len = 0;
-	int i = 0;
-	while (num > 0)
-	{
-		numarray[i++] = num % 10;
-		num = num / 10;
-		len++;
-	}
-	for (i = 0; i < len; i++)
-	{
-		ch[i] = numarray[len - 1 - i];
-	}
-	ch[len] = '\0';
-	return ch;
-}
-
 // 传入时间，返回字符串
 char* BF_TimeToStr(int hour, int min)
 {
-	char* time[20];
-	if (hour > 9)
+	char time[20];
+	memset(time, 0, sizeof(time));
+	if (hour < 9)
 	{
 		time[0] = 48;
 		time[1] = hour + 48;
@@ -127,9 +107,9 @@ char* BF_TimeToStr(int hour, int min)
 		time[1] = (hour % 10) + 48;
 	}
 	
-	strcpy(time[2], "：");
+	time[2] = 58;
 
-	if (min > 9)
+	if (min < 9)
 	{
 		time[3] = 48;
 		time[4] = min + 48;

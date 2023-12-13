@@ -125,6 +125,7 @@ typedef struct TOP_TrainInfo {
 typedef struct PhoneOrderList {
 	char* NodeKind; // 结点类别，H：头结点，E：数据元素结点
 	char* OrderStatus; // 订单状态，F：正式订单，W：候补订单
+	char* OrderNum; // 订单编号
 	Order* CurrentOrder; // 指向当前正式订单结点
 	WaitOrder* CurrentWaitOrder; // 指向当前候补订单结点
 	SUB_TrainInfo* Train; // 指向当前车次结点

@@ -41,7 +41,6 @@ extern int BF_Get_Train_Number(char*);
 extern char* BF_Merge_Char(char[]);
 extern int BF_StrToInt(char*);
 extern int BF_StrToMin(char*);
-extern char* BF_IntToStr(int);
 extern char* BF_TimeToStr(int, int);
 
 
@@ -54,6 +53,7 @@ extern Status UF_Delete_Order(char*);
 extern SearchResult* UF_LeaveTimeSort(SearchResult*);
 extern SearchResult* UF_RunTimeSort(SearchResult* );
 extern SearchResult* UF_ArriveTimeSort(SearchResult*);
+extern PhoneOrder* UF_GetPhoneOrderNode(char*);
 
 // File_Operation.c
 extern Status FO_LoadTrainFromHD();

@@ -168,6 +168,7 @@ Status S_Fill_OrLib_HeadNode(PhoneOrderList* p)
 {
 	p->NodeKind = "H";
 	p->OrderStatus = "HN";
+	p->OrderNum = NULL;
 	p->CurrentOrder = NULL;
 	p->CurrentWaitOrder = NULL;
 	p->Train = NULL;
@@ -213,7 +214,6 @@ PhoneOrder* S_GetPhoneOrderNode(char* _phone)
 {
 	PhoneOrder* p, *PONode; // 工作指针
 	PhoneOrderList* q; // 用于新建结点
-	int i; // 循环变量
 
 	p = VL_Or_Lib->next; // p指向订单链表首元结点
 

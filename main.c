@@ -7,34 +7,44 @@
 #include "V_Lib.h"
 #include "F_Lib.h"
 
-void WAIT_main()
+void main()
 {
+	S_InitSIDB();
+	S_InitTIDB();
+	TM_InitTicket();
+	OM_InitOrder();
+	OM_InitOrderID();
+	FO_LoadTrainFromHD();
+
 	while (True)
 	{
-		// 操作面板行分隔
-		printf("%s\n","-------------------------------------------------------------------------------------------------------------------");
-		printf("------------------------------------------欢迎使用列车票务系统------------------------------------------\n\n");
-		printf("\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n\n", "1、订票服务", "2、输入订单号查询订单", "3、输入手机号查询订单", "4、退票", "5、退出系统");
-		printf("------------------------------------------\n\n");
 		
 		char command;
 		while (True)
 		{
-			printf("请输入要操作的功能（数字1-5）：");
-			scanf("%c", &command);
-			getchar();
-			if (command >= 49 && command <= 53)
+			system("cls");
+			printf("\n\n------------------------------------------欢迎使用列车票务系统------------------------------------------\n\n");
+			printf("\t%s\n\t%s\n\t%s\n\t%s\n\t%s\n\n", "1、订票服务", "2、输入订单号查询订单", "3、输入手机号查询订单", "4、退票", "5、退出系统");
+			printf("------------------------------------------\n\n");
+			while (True)
 			{
-				switch (command)
+				printf("\t请输入要操作的功能（数字1-5）：");
+				scanf("%c", &command);
+				getchar();
+				if (command >= 49 && command <= 53)
 				{
-				case 49: {CheckTrain(); break; }
-				case 50: {CheckOrder(); break; }
-				case 51: {ChechPhoneOrder(); break; }
-				case 52: {WithdrawOrder(); break; }
-				case 53: {ExitSys(); break; }
+					switch (command)
+					{
+					case 49: {DP_CheckTrain(); break; }
+					case 50: {DP_CheckOrder(); break; }
+					case 51: {DP_CheckPhoneOrder(); break; }
+					case 52: {DP_WithdrawOrder(); break; }
+					case 53: {DP_ExitSys(); break; }
+					}
+					break;
 				}
+				else printf("\t请输入正确操作数\n");
 			}
-			else printf("请输入正确操作数\n");
 		}
 	}
 }
