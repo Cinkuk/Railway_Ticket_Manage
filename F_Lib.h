@@ -22,9 +22,10 @@ extern Status TM_NewTrain(char* , char* , StopName* , char* ,
 extern Status OM_InitOrder();
 extern Status OM_InitOrderID();
 extern char* OM_CreateOrderNum();
+extern char* OM_NextOrderNum();
 extern Status OM_New_F_Order(char*, char*,char*, char*, int);
 extern Status OM_New_W_Order(char*, char*, char*, char*, int);
-extern Status OM_CheckWaitOrder(SearchWaitResult*);
+extern Status OM_CheckWaitOrder();
 
 // Search.c
 extern TrainIndexNode* S_RequestTINode();

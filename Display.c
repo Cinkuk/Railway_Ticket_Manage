@@ -25,6 +25,7 @@ void DP_CheckTrain()
 
 	while (True)
 	{
+		system("cls");
 		printf("\n");
 		printf("\t请输入出发地：");
 		scanf("%s", &Leave);
@@ -40,7 +41,7 @@ void DP_CheckTrain()
 		system("cls");
 		printf("\n\n");
 
-		if (!SR) printf("\t%5s查询不到从%s到%s的可用班次\n%5s请输入下一步指令\n", " ", Leave, Arrive," ");
+		if (!SR) printf("\t查询不到从%s到%s的可用班次\n%5s请输入下一步指令\n", Leave, Arrive," ");
 		else if (SR)
 		{
 			// 默认以出发时间排序
@@ -66,6 +67,7 @@ void DP_CheckTrain()
 					}
 				}
 				else printf("\t请输入正确操作数\n");
+				break;
 			}
 		}
 		// 本次查询有可用班次
@@ -153,13 +155,16 @@ void DP_CheckTrain()
 						if (Ticket < q->TrainNode->SurplusTicket)
 						{
 							// 确认信息
-							printf("\t以下为订单信息：\n");
-							printf("\t车次编号：%s\n出发站：%s\n到达站：%s\n出发时间：%02d：%02d\n到达时间：%02d：%02d\n购票张数：%d\n", \
+							system("cls");
+							printf("\n以下为订单信息：\n");
+							printf("\t订单编号：%s\n\t车次编号：%s\n\t出发站：%s\n\t到达站：%s\n\t出发时间：%02d：%02d\n\t到达时间：%02d：%02d\n\t购票张数：%d\n", \
+								OM_NextOrderNum(),\
 								TrainNum, \
 								Leave, \
 								Arrive, \
 								q->LeaveTime[0], q->LeaveTime[1], \
-								q->ArriveTime[0], q->ArriveTime[1], \
+								((q->LeaveTime[0] * 60 + q->LeaveTime[1] + q->ToNextMin) / 60), \
+								((q->LeaveTime[0] * 60 + q->LeaveTime[1] + q->ToNextMin) % 60), \
 								Ticket);
 							printf("\n\t确认？\n\ty：确认订单\n\tn：放弃订单\n");
 							
@@ -168,6 +173,7 @@ void DP_CheckTrain()
 							// 确认操作
 							while (True)
 							{
+								printf("\t请输入指令:");
 								scanf("%s", &ensure);
 								getchar();
 								if (strcmp(ensure, "y") == 0) break;
@@ -176,9 +182,8 @@ void DP_CheckTrain()
 									system("cls");
 									printf("\n");
 									printf("\t取消下单\n");
-									printf("\t三秒后将返回主菜单\n");
-									Sleep(3);
-									system("cls");
+									printf("\t二秒后将返回主菜单\n");
+									Sleep(2000);
 									return;
 								}
 								else printf("\t请输入正确操作指令\n");
@@ -189,9 +194,8 @@ void DP_CheckTrain()
 								system("cls");
 								printf("\n");
 								printf("\t下单成功\n");
-								printf("\t三秒后将返回主菜单\n");
-								Sleep(3);
-								system("cls");
+								printf("\t二秒后将返回主菜单\n");
+								Sleep(2000);
 								return;
 							}
 							else
@@ -199,9 +203,8 @@ void DP_CheckTrain()
 								system("cls");
 								printf("\n");
 								printf("\t发生存储错误\n");
-								printf("\t三秒后将返回主菜单\n");
-								Sleep(3);
-								system("cls");
+								printf("\t二秒后将返回主菜单\n");
+								Sleep(2000);
 								return;
 							}
 						}
@@ -209,13 +212,16 @@ void DP_CheckTrain()
 						else
 						{
 							// 确认信息
-							printf("\t以下为订单信息：\n");
-							printf("\t车次编号：%s\n出发站：%s\n到达站：%s\n出发时间：%02d：%02d\n到达时间：%02d：02d\n购票张数：%d\n", \
+							system("cls");
+							printf("\n以下为订单信息：\n");
+							printf("\t订单编号：%s\n\t车次编号：%s\n\t出发站：%s\n\t到达站：%s\n\t出发时间：%02d：%02d\n\t到达时间：%02d：02d\n\t购票张数：%d\n", \
+								OM_NextOrderNum(),\
 								TrainNum, \
 								Leave, \
 								Arrive,\
 								q->LeaveTime[0], q->LeaveTime[1],\
-								q->ArriveTime[0], q->ArriveTime[1], \
+								((q->LeaveTime[0] * 60 + q->LeaveTime[1] + q->ToNextMin) / 60),\
+								((q->LeaveTime[0] * 60 + q->LeaveTime[1] + q->ToNextMin) % 60), \
 								Ticket);
 							printf("\t余票数量不足，是否进入候补？\n");
 							printf("\n\ty：进入候补\n\tn：放弃\n");
@@ -225,6 +231,7 @@ void DP_CheckTrain()
 							// 确认操作
 							while (True)
 							{
+								printf("\t请输入指令:");
 								scanf("%s", &ensure);
 								getchar();
 								if (strcmp(ensure, "y") == 0) break;
@@ -233,9 +240,8 @@ void DP_CheckTrain()
 									system("cls");
 									printf("\n");
 									printf("\t取消下单\n");
-									printf("\t三秒后将返回主菜单\n");
-									Sleep(3);
-									system("cls");
+									printf("\t二秒后将返回主菜单\n");
+									Sleep(2000);
 									return;
 								}
 								else printf("请输入正确操作指令\n");
@@ -246,9 +252,8 @@ void DP_CheckTrain()
 								system("cls");
 								printf("\n");
 								printf("\t加入候补成功");
-								printf("\t三秒后将返回主菜单\n");
-								Sleep(3);
-								system("cls");
+								printf("\t二秒后将返回主菜单\n");
+								Sleep(2000);
 								return;
 							}
 							else
@@ -256,9 +261,8 @@ void DP_CheckTrain()
 								system("cls");
 								printf("\n");
 								printf("\t发生储存错误\n");
-								printf("\t三秒后将返回主菜单\n");
-								Sleep(3);
-								system("cls");
+								printf("\t二秒后将返回主菜单\n");
+								Sleep(2000);
 								return;
 							}
 						}
@@ -281,7 +285,7 @@ void DP_CheckTrain()
 							" ", " ", "车次编号", " ", " ", "出发地", " ", " ", "到达地", " ", " ", "出发时间", " ", " ", "到达时间", " ", " ", "运行时间", " ", " ");
 						while (p)
 						{
-							printf("%5s|%2s%-10s%3s|%2s%-10s%3s|%2s%-10s%3s|%3s%02d：%02d%4s|%3s%02d：%02d%4s|%3s%02d：%02d%s|%5s\n", \
+							printf("%5s|%2s%-10s%3s|%2s%-10s%3s|%2s%-10s%3s|%3s%02d：%02d%4s|%3s%02d：%02d%4s|%3s%02d：%02d%4s|%5s\n", \
 									" ",\
 									" ", p->TrainNum, " ",\
 									" ", p->Leave, " ",\
@@ -383,7 +387,6 @@ void DP_CheckOrder()
 		if (!order)
 		{
 			printf("\t无此订单号，请重新输入\n");
-			Sleep(1);
 			system("cls");
 		}
 		else if (order) break;
@@ -412,6 +415,10 @@ void DP_CheckOrder()
 						" ", order->OrderNode->End, " ",\
 						" ", order->OrderNode->TicketNum, " ",\
 						" ");
+
+					printf("\n\t请输入回车键返回");
+					getchar();
+					return;
 				}
 				else
 				{
@@ -512,7 +519,7 @@ void DP_CheckPhoneOrder()
 					strcpy(Arrive, p->ArriveStop);
 					Ticket = p->TicketAmount;
 					LT = p->Train->StationLeaveTime->next;
-					Ticket = 0; flag = 0; Runtime = 0;
+					flag = 0; Runtime = 0;
 					while (LT)
 					{
 						if (strcmp(LT->name, Leave) == 0) { Leavetime = LT->hour * 60 + LT->min; flag = 1; }
@@ -536,6 +543,8 @@ void DP_CheckPhoneOrder()
 						" ", (Arrivetime/60),(Arrivetime%60), " ", \
 						" ", Ticket, " ", \
 						" ");
+
+					p = p->NextOrder;
 				} // while (p)
 				break;
 			} // else 显示订单

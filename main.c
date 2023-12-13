@@ -7,7 +7,7 @@
 #include "V_Lib.h"
 #include "F_Lib.h"
 
-void main()
+void imain()
 {
 	S_InitSIDB();
 	S_InitTIDB();
@@ -18,7 +18,6 @@ void main()
 
 	while (True)
 	{
-		
 		char command;
 		while (True)
 		{

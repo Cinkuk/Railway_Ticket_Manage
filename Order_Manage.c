@@ -17,6 +17,9 @@
 // 创建唯一的订单编号
 // char* OM_CreateOrderNum()
 // return: 订单编号字符串指针
+// 
+// 获取下一张订单的编号
+// char* OM_NextOrderNum()
 //
 // 创建新的正式订单
 // Status OM_New_F_Order(char* _phone, char* _TrainNum,
@@ -121,6 +124,52 @@ char* OM_CreateOrderNum()
 		if (node->ID[0] > 90) return NULL; // 当前编号已超出最大值“Z999999999”
 
 
+		return BF_Merge_Char(node->ID);
+	}
+}
+
+// 获取下一张订单的编号
+// Freeze
+char* OM_NextOrderNum()
+{
+	int i; // 循环变量
+	if (!(VL_OrderID->next)) // 编号池为空
+	{
+		OrderSet* node;
+		node = (OrderSet*)malloc(sizeof(struct OrderSet));
+		if (!node) return NULL; // 无可用空间申请编号
+		memset(node, 0, sizeof(OrderSet));
+		node->OrderKind = (char*)malloc(sizeof(char) * 5);
+
+		// 初始化为A000000001
+		node->ID[0] = 65; // 65为ASCII的A
+		for (int i = 1; i < 9; i++) node->ID[i] = 48; // 48为ASCII的0
+		node->ID[9] = 49;
+		node->ID[10] = '\0';
+		return BF_Merge_Char(node->ID);
+	}
+	else
+	{
+		OrderSet* node;
+		node = (OrderSet*)malloc(sizeof(struct OrderSet));
+		if (!node) return NULL; // 无可用空间申请编号
+		memset(node, 0, sizeof(OrderSet));
+		node->OrderKind = (char*)malloc(sizeof(char) * 5);
+	
+		for (i = 0; i <= 10; i++) node->ID[i] = VL_OrderID->next->ID[i]; // 复制前一张订单的编号
+
+		node->ID[9] += 1;
+
+		for (i = 9; i > 0; i--)
+		{
+			if (node->ID[i] > 57) // >0需进位
+			{
+				node->ID[i] = 48;
+				node->ID[i - 1] += 1;
+			}
+		}
+
+		if (node->ID[0] > 90) return NULL; // 当前编号已超出最大值“Z999999999”
 		return BF_Merge_Char(node->ID);
 	}
 }
@@ -328,7 +377,7 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 }
 
 // 查询候补订单能否候补并操作
-Status OM_CheckWaitOrder(SearchWaitResult* SWR)
+Status OM_CheckWaitOrder()
 {
 
 }

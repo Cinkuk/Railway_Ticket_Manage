@@ -1,8 +1,8 @@
 // 本文件存放的函数面向用户的操作
 // 本文件的函数名以'UF_'开头
 //
-// Test Status: Working
-// Code Status: Working
+// Test Status: Finished
+// Code Status: Freeze
 //
 // 函数与功能对应：
 //
@@ -251,11 +251,113 @@ Status UF_New_W_Order(char* _TrainNum, char* _Leave, char* _Arrive,
 }
 
 // 删除订单
+// Freeze
 // input: 订单号
 // output: OK, ERROR
 Status UF_Delete_Order(char* OrderNum)
 {
+	// 工作信息
+	char* phone;
+	int Kind; // 0：正式订单，1：候补
+	char* TrainNum; // 车次
+	// 工作指针
+	OrderSet* IDNode, * pre_IDNode; // 订单池中的订单结点，前一个结点
+	PhoneOrder * PhOrderNode; // 订单数据库中的订单结点
+	PhoneOrderList* pre_PhOrder, * PhOrder; // 订单数据库对应手机号中的前一个订单结点，对应订单结点
+	SUB_TrainInfo* TrainNode; // 车次结点
+
+	// 用于正式订单
+	Order* TrainOrderNode, *pre_TrainOrderNode; // 车次数据库中的订单结点，订单之前一个结点
 	
+	// 用于候补订单
+	WaitOrder* WTrainNode, * pre_WTrainNode; // 车次数据库中的候补订单结点，订单之前一个结点
+
+	// 在订单池中定位
+	pre_IDNode = VL_OrderID;
+	// pre_IDNode下一个结点是目标结点
+	while (strcmp(BF_Merge_Char(pre_IDNode->next->ID), OrderNum) != 0)
+	{
+		pre_IDNode = pre_IDNode->next;
+	}
+	IDNode = pre_IDNode->next;
+
+	// 订单类型
+	Kind = (strcmp(IDNode->OrderKind, "F") == 0) ? 0 : 1;
+
+	// 保存手机号
+	if (Kind == 0)	phone = IDNode->OrderNode->phone;
+	else if (Kind == 1) phone = IDNode->WaitOrderNode->phone;
+	// 保存车次
+	if (Kind == 0) TrainNum = IDNode->OrderNode->TrainNum;
+	else if (Kind == 1) TrainNum = IDNode->WaitOrderNode->TrainNum;
+
+	// 获取订单数据库对应手机号结点
+	PhOrderNode = S_GetPhoneOrderNode(phone);
+	pre_PhOrder = PhOrderNode->OrderList;
+
+	// 获取车次结点
+	TrainNode = S_GetTrainNode(TrainNum);
+
+	//////
+	// 处理
+
+	// 正式订单
+	if (Kind==0)
+	{
+		// 订单池链表删除目标结点
+		pre_IDNode->next = IDNode->next;
+		
+		// 处理车次数据库
+		// 定位车次订单结点
+		pre_TrainOrderNode = TrainNode->TrainOrder; 
+		while (strcmp(pre_TrainOrderNode->next->OrderNum, OrderNum) != 0)
+		{
+			pre_TrainOrderNode = pre_TrainOrderNode->next;
+		}
+		TrainOrderNode = pre_TrainOrderNode->next;
+		// 车次数据库链表删除
+		pre_TrainOrderNode->next = TrainOrderNode->next;
+		
+		// 处理订单数据库
+		// 定位订单数据库订单结点
+		while (strcmp(pre_PhOrder->NextOrder->OrderNum, OrderNum) != 0)
+		{
+			pre_PhOrder = pre_PhOrder->NextOrder;
+		}
+		PhOrder = pre_PhOrder->NextOrder;
+		// 订单数据库中删除
+		pre_PhOrder->NextOrder = PhOrder->NextOrder;
+	}
+	// 候补订单
+	else if (Kind==1)
+	{
+		// 订单池链表删除目标结点
+		pre_IDNode->next = IDNode->next;
+
+		// 处理车次数据库
+		// 定位车次订单结点
+		pre_WTrainNode = TrainNode->TrainWaitOrder->rear->next;
+		while (strcmp(pre_WTrainNode->next->OrderNum, OrderNum) != 0)
+		{
+			pre_WTrainNode = pre_WTrainNode->next;
+		}
+		WTrainNode = pre_WTrainNode->next;
+		// 车次数据库中删除
+		pre_WTrainNode->next = WTrainNode->next;
+
+		// 处理订单数据库
+		// 定位订单结点
+		while (strcmp(pre_PhOrder->NextOrder->OrderNum, OrderNum) != 0)
+		{
+			pre_PhOrder = pre_PhOrder->NextOrder;
+		}
+		PhOrder = pre_PhOrder->NextOrder;
+		// 订单数据库中删除
+		pre_PhOrder->NextOrder = PhOrder->NextOrder;
+	}
+
+	return OK;
+
 }
 
 // 按照出发时间递增排序
@@ -399,6 +501,7 @@ SearchResult* UF_ArriveTimeSort(SearchResult* CurRes)
 }
 
 // 获取手机号下的订单结点
+// Freeze
 PhoneOrder* UF_GetPhoneOrderNode(char* phone)
 {
 	return S_GetPhoneOrderNode(phone);

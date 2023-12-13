@@ -2,7 +2,7 @@
 // 所依赖的关键变量存放于Variables_Lib.c中
 // 本文件的函数名以'TM_'开头
 //
-// Test Status: Freeze
+// Test Status: Finished
 // Code Status: Freeze
 //
 // 函数与功能对应：

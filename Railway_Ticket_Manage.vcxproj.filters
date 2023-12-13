@@ -39,10 +39,10 @@
     <ClCompile Include="Search.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="test.c">
+    <ClCompile Include="Display.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Display.c">
+    <ClCompile Include="test.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

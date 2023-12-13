@@ -7,7 +7,7 @@ static void DisplaySearchResult(SearchResult*);
 static void DisplayTrainNode(SUB_TrainInfo*);
 static void DisplayPhoneOrder(PhoneOrder*);
 
-void imain()
+void main()
 {	
 
 	S_InitSIDB();
@@ -77,12 +77,17 @@ void imain()
 	//DisplaySearchResult(p);
 #endif
 
+
 	UF_New_F_Order( "G44", "杭州东", "南京南", 8, "13712345678");
 	UF_New_W_Order("G46", "长兴", "济南西", 500,"13712345678");
 	printf("%d\n", UF_New_F_Order( "G44", "南京南", "天津南", 500,"13712345649"));
 	UF_New_W_Order("G44", "南京南", "徐州东", 1,"13712345680");
 	UF_New_W_Order( "G44", "南京南", "徐州东", 1,"13712345681");
-	
+	//UF_Delete_Order("A000000004");
+	UF_Delete_Order("A000000001");
+	printf("%s\n", OM_NextOrderNum());
+
+
 #if 0
 	OrderSet* result=(Order*)malloc(sizeof(Order));
 
@@ -91,6 +96,7 @@ void imain()
 	//if (strcmp(result->OrderKind, "F")==0) 
 #endif
 
+#if 0
 	PhoneOrder* p, * q;
 	p = UF_GetPhoneOrderNode("13712345678");
 	q = UF_GetPhoneOrderNode("13712345678");
@@ -99,7 +105,7 @@ void imain()
 	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345649"));
 	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345680"));
 	DisplayPhoneOrder(S_GetPhoneOrderNode("13712345681"));
-
+#endif
 
 #if 0
 	DisplayTrainNode(S_GetTrainNode("D10"));
