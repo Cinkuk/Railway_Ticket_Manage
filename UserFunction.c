@@ -14,7 +14,7 @@
 // 查询订单
 // OrderSet* UF_GetOrderInfo(char* _OrderNum)
 // input：订单号
-// return：1:正式订单，2：候补订单，3：无此订单
+// return：订单池目标地址，NULL
 // 
 // 下正式订单
 // Status UF_New_F_Order(char* _TrainNum, char* _Leave, char* _Arrive, 
@@ -204,7 +204,7 @@ SearchResult* UF_SearchStop(char* _Leave, char* _Arrive)
 // 查询订单
 // Freeze
 // input：订单号
-// return：1:正式订单，2：候补订单，3：无此订单
+// return：订单池目标地址，NULL
 OrderSet* UF_GetOrderInfo(char* _OrderNum)
 {
 	OrderSet* p; // 工作指针
