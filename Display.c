@@ -280,11 +280,11 @@ void DP_CheckTrain()
 						p = p->NextResult;
 						system("cls");
 						printf("\n\t%5s查询到从%s到%s的班次如下：\n\n"," ", Leave, Arrive);
-						printf("%5s|%2s%-10s%3s|%2s%-10s%3s|%2s%-10s%3s|%2s%-8s%3s|%2s%-8s%3s|%2s%-8s%3s|%2s%-8s%3s|%5s\n", \
+						printf("%5s|%2s%-10s%3s|%2s%-10s%3s|%2s%-10s%3s|%2s%-8s%3s|%2s%-8s%3s|%2s%-8s%3s|%4s%-5s%4s|%5s\n", \
 							" ", " ", "车次编号", " ", " ", "出发地", " ", " ", "到达地", " ", " ", "出发时间", " ", " ", "到达时间", " ", " ", "运行时间", " "," ", "余票", " ", " ");
 						while (p)
 						{
-							printf("%5s|%2s%-10s%3s|%2s%-10s%3s|%2s%-10s%3s|%3s%02d：%02d%4s|%3s%02d：%02d%4s|%3s%02d：%02d%4s|%4s%4ds%5s|%5s\n", \
+							printf("%5s|%2s%-10s%3s|%2s%-10s%3s|%2s%-10s%3s|%3s%02d：%02d%4s|%3s%02d：%02d%4s|%3s%02d：%02d%4s|%4s%4d%5s|%5s\n", \
 									" ",\
 									" ", p->TrainNum, " ",\
 									" ", p->Leave, " ",\
@@ -402,26 +402,26 @@ void DP_CheckOrder()
 				{
 					if (strcmp(order->OrderNode->phone, ph) != 0)
 					{
-						printf("\n\t手机号不正确，请按回车键重新输入，或输入q退出查询：");
+						printf("\n\t手机号不正确，请输入q退出查询，或输入其他字符重新输入：");
 						scanf("%S", &ErrorCommand);
 						getchar();
 						if (strcmp(ErrorCommand, "q") == 0) return;
 						else;
 					}
-					else break;
+					else goto SHOW;
 				}
 				else if (strcmp(order->OrderKind, "W") == 0)
 				{
 
 					if (strcmp(order->WaitOrderNode->phone, ph) != 0)
 					{
-						printf("\n\t手机号不正确，请按回车键重新输入，或输入q退出查询：");
+						printf("\n\t手机号不正确，请输入q退出查询，或输入其他字符重新输入：");
 						scanf("%S", &ErrorCommand);
 						getchar();
 						if (strcmp(ErrorCommand, "q") == 0) return;
 						else;
 					}
-					else break;
+					else goto SHOW;
 				}
 			}
 			else if (!order)
@@ -437,6 +437,7 @@ void DP_CheckOrder()
 	
 	while (True)
 	{
+		SHOW:
 		// 该订单为正式订单
 		if (strcmp(order->OrderKind, "F") == 0)
 		{
@@ -651,7 +652,7 @@ void DP_WithdrawOrder()
 				scanf("%s", phone);
 				getchar();
 				
-				if (strcmp(phone, "q")) return;
+				if (strcmp(phone, "q")==0) return;
 				else if (strlen(phone) != 11)
 				{
 					system("cls");
@@ -680,7 +681,6 @@ void DP_WithdrawOrder()
 							printf("\n\t订单手机号与输入的手机号不匹配，输入q退出查询，或输入其他字符重新输入手机号：");
 							scanf("%s", &ErrorCommand);
 							if (strcmp(ErrorCommand, "q") == 0) return;
-							else system("cls");
 
 						}
 						else if (strcmp(phone, PhoneInOrder) == 0)
@@ -883,16 +883,18 @@ void DP_WithdrawOrder()
 
 					p = p->NextOrder;
 				} // while (p)
-				break;
+				
 			} // else 显示订单
 			while (True)
 			{
 				printf("\n\t请输入订单号：");
 				scanf("%s", &OrderNum);
 				getchar();
+				p = PN->OrderList->NextOrder;
 				while (p)
 				{
-
+					if (strcmp(p->OrderNum, OrderNum) == 0) break;
+					else p = p->NextOrder;
 				}
 				if (!p)
 				{
@@ -954,7 +956,7 @@ void DP_WithdrawOrder()
 					{
 						while (True)
 								{
-									printf("\n\t是否要退票？\n\ny：确定\nn：取消退票\n\n请输入指令:");
+									printf("\n\t是否要退票？\n\n\ty：确定\n\tn：取消退票\n\n\t请输入指令:");
 									while (True)
 									{
 										scanf("%s", &ErrorCommand);
