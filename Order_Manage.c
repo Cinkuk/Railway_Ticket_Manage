@@ -2,8 +2,8 @@
 // 所依赖的关键变量存放于Variables_Lib.c中
 // 本文件的函数名以'OM_'开头
 //
-// Test Status: Working
-// Code Status: Working
+// Test Status: Finished
+// Code Status: Freeze
 //
 // 函数与功能对应:
 // 
@@ -37,8 +37,6 @@
 // Status OM_CheckWaitOrder(SearchWaitResult* SWR)
 // output: OK（有候补订单并成功候补），EMPTY（无可以进行候补操作的订单）
 // 
-// 
-//
 
 
 #include "V_Lib.h"
@@ -258,6 +256,8 @@ Status OM_New_F_Order(char* _phone, char* _TrainNum,
 	p->next = TrainNode->TrainOrder->next;
 	TrainNode->TrainOrder->next = p;
 
+	q->CurrentWaitOrder = NULL;
+
 	t = VL_OrderID->next;
 	// 订单信息结点p存入订单编号池内
 	while (t)
@@ -357,6 +357,8 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 	p->next = TrainNode->TrainWaitOrder->rear->next;
 	TrainNode->TrainWaitOrder->rear->next = p;
 	TrainNode->TrainWaitOrder->rear = p;
+
+	q->CurrentOrder = NULL;
 	
 	t = VL_OrderID->next;
 	// 订单信息结点p存入订单编号池内
@@ -377,7 +379,176 @@ Status OM_New_W_Order(char* _phone, char* _TrainNum,
 }
 
 // 查询候补订单能否候补并操作
+// Freeze
 Status OM_CheckWaitOrder()
 {
+	// 工作指针
+	OrderSet* CurID = VL_OrderID->next;
+	OrderSet* ChangedID;
+	PhoneOrder* PhOrderNode; // 订单数据库的手机号结点
+	PhoneOrderList* pre_PhOrder, * PhOrder; // 订单数据库手机号订单的前一个订单结点，对应对应订单结点
+	SUB_TrainInfo* TrainNode; // 车次结点
+	WaitOrder* WTrainNode, * pre_WTrainNode; // 车次数据库中的候补订单结点，订单前一个结点
 
-}
+	// 用于插入的订单结点
+	Order* NewTOrder;
+	PhoneOrderList* NewPOrder;
+
+	// 订单信息
+	char* OrderNum, * TrainNum, * phone, * Start, * end, * NodeKind;
+	int TicketNum;
+
+
+	// 遍历订单池
+	while (CurID)
+	{
+		// 当前订单为正式订单
+		if (strcmp(CurID->OrderKind, "F") == 0) CurID = CurID->next;
+
+		// 当前订单为候补订单
+		else if (strcmp(CurID->OrderKind, "W") == 0)
+		{
+			// 记录车次号
+			TrainNum = (char*)malloc(sizeof(char) * STRLENGTH);
+			if (!TrainNum) return NOSPACE;
+			memset(TrainNum, 0, sizeof(char) * STRLENGTH);
+			strcpy(TrainNum, CurID->WaitOrderNode->TrainNum);
+
+			// 定位车次结点
+			TrainNode = S_GetTrainNode(TrainNum);
+
+			// 判断余票是否充足
+			// 不足，释放内存，扫描下一张订单
+			if (TrainNode->SurplusTicket < CurID->WaitOrderNode->TicketNum)
+			{
+				CurID = CurID->next;
+				continue;
+			}
+			// 足够，进入候补
+			else if (TrainNode->SurplusTicket >= CurID->WaitOrderNode->TicketNum)
+			{
+				// 进入车次候补订单结点
+				pre_WTrainNode = TrainNode->TrainWaitOrder->rear->next; // 进入头节点节点
+
+				// 按照顺位判断
+				while (strcmp(pre_WTrainNode->next->NodeKind, "H") != 0)
+				{
+					// 下一顺位所需票数大于余票，进入下一顺位
+					if (pre_WTrainNode->next->TicketNum > TrainNode->SurplusTicket)
+						pre_WTrainNode = pre_WTrainNode->next;
+					
+					// 下一顺位所需票数小于余票，进入候补处理
+					else if (pre_WTrainNode->next->TicketNum <= TrainNode->SurplusTicket)
+					{
+						// 车次数据库结点定位
+						WTrainNode = pre_WTrainNode->next;
+
+						// 记录订单其他信息
+						OrderNum = (char*)malloc(sizeof(char) * STRLENGTH);
+						phone = (char*)malloc(sizeof(char) * STRLENGTH);
+						Start = (char*)malloc(sizeof(char) * STRLENGTH);
+						end = (char*)malloc(sizeof(char) * STRLENGTH);
+						NodeKind = (char*)malloc(sizeof(char) * STRLENGTH);
+
+						if (!OrderNum || !phone || !Start || !end || !NodeKind) return NOSPACE;
+						memset(OrderNum, 0, sizeof(char) * STRLENGTH);
+						memset(phone, 0, sizeof(char) * STRLENGTH);
+						memset(Start, 0, sizeof(char) * STRLENGTH);
+						memset(end, 0, sizeof(char) * STRLENGTH);
+						memset(NodeKind, 0, sizeof(char) * STRLENGTH);
+
+						strcpy(OrderNum, WTrainNode->OrderNum);
+						strcpy(TrainNum, WTrainNode->TrainNum);
+						strcpy(phone, WTrainNode->phone);
+						strcpy(Start, WTrainNode->Start);
+						strcpy(end, WTrainNode->End);
+						strcpy(NodeKind, "E");
+						TicketNum = WTrainNode->TicketNum;
+
+						// 写入新结点
+						NewTOrder = (Order*)malloc(sizeof(Order));
+						if (!NewTOrder) return NOSPACE;
+						memset(NewTOrder, 0, sizeof(Order));
+						NewTOrder->NodeKind = NodeKind;
+						NewTOrder->OrderNum = OrderNum;
+						NewTOrder->TrainNum = TrainNum;
+						NewTOrder->phone = phone;
+						NewTOrder->Start = Start;
+						NewTOrder->End = end;
+						NewTOrder->TicketNum = TicketNum;
+
+						NewPOrder = (PhoneOrderList*)malloc(sizeof(PhoneOrderList));
+						if (!NewPOrder) return NOSPACE;
+						memset(NewPOrder, 0, sizeof(Order));
+						char* OrderStatus = (char*)malloc(sizeof(char) * STRLENGTH);
+						if (!OrderStatus) return NOSPACE;
+						memset(OrderStatus, 0, sizeof(char) * STRLENGTH);
+						strcpy(OrderStatus, "F");
+
+						NewPOrder->NodeKind = NodeKind;
+						NewPOrder->OrderStatus = OrderStatus;
+						NewPOrder->OrderNum = OrderNum;
+						NewPOrder->LeaveStop = Start;
+						NewPOrder->ArriveStop = end;
+						NewPOrder->TicketAmount = TicketNum;
+						NewPOrder->CurrentWaitOrder = NULL;
+						// 车次数据库删除候补结点
+						pre_WTrainNode->next = WTrainNode->next;
+						if (strcmp(pre_WTrainNode->next->NodeKind, "H") == 0) TrainNode->TrainWaitOrder->rear = pre_WTrainNode->next;
+				
+						// 加入车次数据库正式订单结点
+						NewTOrder->next = TrainNode->TrainOrder->next;
+						TrainNode->TrainOrder->next = NewTOrder;
+	
+
+						// 在订单池中定位结点
+						ChangedID = VL_OrderID->next;
+						while (strcmp(BF_Merge_Char(ChangedID->ID), OrderNum) != 0)
+							ChangedID = ChangedID->next;
+				
+						// 在订单数据库中定位候补结点
+						PhOrderNode = VL_Or_Lib->next;
+						while (strcmp(PhOrderNode->phone, phone) != 0)
+							PhOrderNode = PhOrderNode->next;
+						pre_PhOrder = PhOrderNode->OrderList;
+						while (strcmp(pre_PhOrder->NextOrder->OrderNum, OrderNum) != 0)
+							pre_PhOrder = pre_PhOrder->NextOrder;
+						PhOrder = pre_PhOrder->NextOrder;
+				
+						// 删除候补接单
+						pre_PhOrder->NextOrder = PhOrder->NextOrder;
+
+						// 加入正式订单结点
+						NewPOrder->NextOrder = PhOrderNode->OrderList->NextOrder;
+						PhOrderNode->OrderList->NextOrder = NewPOrder;
+
+						// 链接车次结点和订单结点
+						NewPOrder->Train = TrainNode;
+						NewPOrder->CurrentOrder = TrainNode->TrainOrder;
+
+						// 修改订单池结点指向和信息
+						char* NewOrderKind = (char*)malloc(sizeof(char) * STRLENGTH);
+						strcpy(NewOrderKind, "F");
+						ChangedID->OrderKind = NewOrderKind;
+						ChangedID->WaitOrderNode = NULL;
+						ChangedID->OrderNode = NewTOrder;
+
+						// 重入头节点检查下一顺位
+						pre_WTrainNode = TrainNode->TrainWaitOrder->rear->next;
+
+					} // else if (pre_WTrainNode->next->TicketNum <= TrainNode->SurplusTicket)
+				} // while (strcmp(pre_WTrainNode->next->NodeKind, "H") != 0)
+
+				// 扫描订单池下一结点
+				CurID = CurID->next;
+
+
+			} // else if (TrainNode->SurplusTicket >= CurID->WaitOrderNode->TicketNum)
+
+		} // else if (strcmp(CurID->OrderKind, "W") == 0)
+		
+	} // while (VL_OrderID)
+
+	return OK;
+} // END Function
+

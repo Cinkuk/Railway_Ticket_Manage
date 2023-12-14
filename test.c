@@ -7,7 +7,7 @@ static void DisplaySearchResult(SearchResult*);
 static void DisplayTrainNode(SUB_TrainInfo*);
 static void DisplayPhoneOrder(PhoneOrder*);
 
-void main()
+void TESTmain()
 {	
 
 	S_InitSIDB();
@@ -77,16 +77,18 @@ void main()
 	//DisplaySearchResult(p);
 #endif
 
-
+#if 0
 	UF_New_F_Order( "G44", "杭州东", "南京南", 8, "13712345678");
 	UF_New_W_Order("G46", "长兴", "济南西", 500,"13712345678");
 	printf("%d\n", UF_New_F_Order( "G44", "南京南", "天津南", 500,"13712345649"));
 	UF_New_W_Order("G44", "南京南", "徐州东", 1,"13712345680");
 	UF_New_W_Order( "G44", "南京南", "徐州东", 1,"13712345681");
+	printf(" ");
 	//UF_Delete_Order("A000000004");
-	UF_Delete_Order("A000000001");
+	//UF_Delete_Order("A000000001");
+	OM_CheckWaitOrder();
 	printf("%s\n", OM_NextOrderNum());
-
+#endif
 
 #if 0
 	OrderSet* result=(Order*)malloc(sizeof(Order));

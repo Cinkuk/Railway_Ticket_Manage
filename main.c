@@ -7,7 +7,7 @@
 #include "V_Lib.h"
 #include "F_Lib.h"
 
-void imain()
+void main()
 {
 	S_InitSIDB();
 	S_InitTIDB();
@@ -44,6 +44,8 @@ void imain()
 				}
 				else printf("\t请输入正确操作数\n");
 			}
+			OM_CheckWaitOrder();
+
 		}
 	}
 }

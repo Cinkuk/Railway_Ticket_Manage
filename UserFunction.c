@@ -317,6 +317,9 @@ Status UF_Delete_Order(char* OrderNum)
 		TrainOrderNode = pre_TrainOrderNode->next;
 		// 车次数据库链表删除
 		pre_TrainOrderNode->next = TrainOrderNode->next;
+
+		// 增加余票
+		TrainNode->SurplusTicket += TrainOrderNode->TicketNum;
 		
 		// 处理订单数据库
 		// 定位订单数据库订单结点
