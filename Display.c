@@ -490,7 +490,6 @@ void DP_CheckOrder()
 				" ", order->WaitOrderNode->TicketNum, " ",\
 				" ");
 			printf("\t请按回车键返回");
-			scanf("%s", ph);
 			getchar();
 			return;
 		}
