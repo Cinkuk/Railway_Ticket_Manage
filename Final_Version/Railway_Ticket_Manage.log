@@ -1,0 +1,24 @@
+﻿  Basic_Function.c
+  Display.c
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\Display.c(406,13): warning C4477: “scanf”: 格式字符串“%S”需要类型“unsigned short *”的参数，但可变参数 1 拥有了类型“char (*)[30]”
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\Display.c(406,13): message : 请考虑在格式字符串中使用“%hS”
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\Display.c(406,13): message : 请考虑在格式字符串中使用“%TS”
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\Display.c(419,13): warning C4477: “scanf”: 格式字符串“%S”需要类型“unsigned short *”的参数，但可变参数 1 拥有了类型“char (*)[30]”
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\Display.c(419,13): message : 请考虑在格式字符串中使用“%hS”
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\Display.c(419,13): message : 请考虑在格式字符串中使用“%TS”
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\Display.c(640,9): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+  File_Operation.c
+  main.c
+  Order_Manage.c
+  Search.c
+  test.c
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\test.c(191,4): warning C4133: “=”: 从“SUB_TrainInfo *”到“StopName *”的类型不兼容
+F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\test.c(223,6): warning C4133: “=”: 从“StopName *”到“SUB_TrainInfo *”的类型不兼容
+  Ticket_Manage.c
+  UserFunction.c
+  Variables_Lib.c
+  正在生成代码
+  Previous IPDB not found, fall back to full compilation.
+  All 47 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  Railway_Ticket_Manage.vcxproj -> F:\Code_Projects\C project\SCAU_Data_Structure\Final_Lab\Railway_Ticket_Manage\x64\Release\Railway_Ticket_Manage.exe
