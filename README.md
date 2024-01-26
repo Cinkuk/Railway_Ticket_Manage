@@ -2,6 +2,8 @@
 
 只做了command窗口版本，没做图形界面，有一定的健壮性
 
+主程序为Railway_Ticket_Manage.exe
+
 ### 实现的功能
 1、订票
 
